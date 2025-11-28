@@ -91,7 +91,7 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
 /* Bleed Image */
 .slide-container.bleed-image-layout { display: grid; grid-template-columns: 1fr 1fr; padding: 0; align-items: start; gap: 0; }
 .slide-container.bleed-image-layout .content-container { padding: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
-.slide-container.bleed-image-layout .image-container { height: 100%; width: 100%; }
+.slide-container.bleed-image-layout .image-container { height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; background: #f8f9fa; }
 .slide-container.bleed-image-layout img.bleed-image-side { width: 100%; height: 100%; object-fit: cover; }
 
 /* Tables */
@@ -114,6 +114,57 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
 .chart-container { width: 100%; height: 350px; display: flex; justify-content: center; }
 .area-chart-svg { width: 90%; height: 100%; overflow: visible; }
 .chart-summary { text-align: center; font-style: italic; color: #627d98; margin-top: 20px; }
+
+/* Checkbuttons */
+.check-btn {
+    cursor: pointer;
+    background: #fff;
+    border: 2px solid #334e68;
+    color: #334e68;
+    padding: 15px 20px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.check-btn:hover {
+    background: #334e68;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(16, 42, 67, 0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    text-align: left;
+    position: relative;
+    border-top: 8px solid #d64545;
+}
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #829ab1;
+}
+.close-modal:hover { color: #102a43; }
 
 /* QUIZ STYLES */
 .quiz-scroll-container {
@@ -203,8 +254,8 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
 <div class="slide-container" id="slide2">
     <h2 class="slide-title">Modul 1: Det grunnleggende</h2>
     <div class="content-area">
-        <div class="two-column tiled">
-            <div>
+        <div class="two-column">
+            <div style="background: #f0f4f8; padding: 30px; border-radius: 12px; border-left: 5px solid #334e68;">
                 <h3><i class="fa-solid fa-network-wired"></i> Nettverksstruktur</h3>
                 <p><strong>Kjerne vs. Kant:</strong> Kant er brukerutstyret (oss). Kjernen er rutere/infrastruktur.</p>
                 <p><strong>Internett vs. WWW:</strong> Internett er infrastrukturen (kablene, IP). WWW er en applikasjon (nettsider) som kjører <em>på</em> Internett.</p>
@@ -212,6 +263,37 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
             </div>
             <div>
                 <h3><i class="fa-solid fa-hourglass-half"></i> 4 typer forsinkelse</h3>
+                <div class="chart-container" style="height: 250px;">
+                    <!-- Diagram: Network Delays -->
+                    <svg class="area-chart-svg" viewBox="0 0 500 200">
+                        <!-- Node A -->
+                        <rect x="10" y="80" width="40" height="40" fill="#334e68" rx="5" />
+                        <text x="30" y="105" fill="white" text-anchor="middle" font-size="12">PC</text>
+
+                        <!-- Router -->
+                        <rect x="230" y="80" width="40" height="40" fill="#d64545" rx="5" />
+                        <text x="250" y="105" fill="white" text-anchor="middle" font-size="12">R</text>
+
+                        <!-- Line -->
+                        <line x1="50" y1="100" x2="230" y2="100" stroke="#102a43" stroke-width="2" />
+
+                        <!-- Step 1: Processing -->
+                        <circle cx="230" cy="100" r="25" fill="none" stroke="#243b53" stroke-width="2" stroke-dasharray="4" />
+                        <text x="230" y="60" fill="#243b53" text-anchor="middle" font-size="10">1. Prosess</text>
+
+                        <!-- Step 2: Queue -->
+                        <rect x="180" y="90" width="40" height="20" fill="#bcccdc" />
+                        <text x="200" y="105" fill="#102a43" text-anchor="middle" font-size="10">2. Kø</text>
+
+                        <!-- Step 3: Transmission -->
+                        <rect x="140" y="95" width="20" height="10" fill="#102a43" />
+                        <text x="150" y="85" fill="#102a43" text-anchor="middle" font-size="10">3. Trans.</text>
+
+                        <!-- Step 4: Propagation -->
+                        <text x="100" y="120" fill="#102a43" text-anchor="middle" font-size="10">4. Utbredelse (Fysisk reise)</text>
+                        <line x1="140" y1="100" x2="60" y2="100" stroke="#d64545" stroke-width="2" marker-end="url(#arrow)" />
+                    </svg>
+                </div>
                 <ol>
                     <li><strong>Prosessering:</strong> Sjekke bitfeil, rutingvalg.</li>
                     <li><strong>Kø:</strong> Vente på tur i bufferet.</li>
@@ -232,13 +314,44 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
                 <h3>Hvorfor lagdeling?</h3>
                 <p>Abstraksjon! Hvert lag tilbyr en tjeneste til laget over uten å vise hvordan det gjøres.</p>
                 <ul>
-                    <li><strong>OSI (7 lag):</strong> Teoretisk modell (Fysisk, Link, Nettverk, Transport, Sesjon, Presentasjon, Applikasjon).</li>
+                    <li><strong>OSI (7 lag):</strong> Teoretisk modell.</li>
                     <li><strong>TCP/IP (5 lag):</strong> Modellen Internett faktisk bruker.</li>
                 </ul>
                 <p><span class="viktig-badge">VIKTIG</span> <strong>Innkapsling:</strong> Data får ny "konvolutt" (header) for hvert lag nedover.</p>
             </div>
-            <div class="image-wrapper">
-                <img src="http://googleusercontent.com/image_collection/image_retrieval/11429737186578722592" alt="OSI vs TCP/IP model comparison diagram">
+            <div class="image-wrapper" style="background:#fff; border: 1px solid #eee;">
+                <!-- DIAGRAM: OSI vs TCP -->
+                <svg viewBox="0 0 500 400" width="100%" height="100%">
+                    <!-- Titles -->
+                    <text x="120" y="40" text-anchor="middle" font-weight="bold" fill="#334e68" font-size="18">OSI Modell (7 Lag)</text>
+                    <text x="380" y="40" text-anchor="middle" font-weight="bold" fill="#334e68" font-size="18">TCP/IP (5 Lag)</text>
+
+                    <!-- OSI Stack -->
+                    <g transform="translate(50, 60)">
+                        <rect x="0" y="0" width="140" height="40" fill="#f0f4f8" stroke="#334e68"/><text x="70" y="25" text-anchor="middle">7. Applikasjon</text>
+                        <rect x="0" y="40" width="140" height="40" fill="#f0f4f8" stroke="#334e68"/><text x="70" y="65" text-anchor="middle">6. Presentasjon</text>
+                        <rect x="0" y="80" width="140" height="40" fill="#f0f4f8" stroke="#334e68"/><text x="70" y="105" text-anchor="middle">5. Sesjon</text>
+                        <rect x="0" y="120" width="140" height="40" fill="#bcccdc" stroke="#334e68"/><text x="70" y="145" text-anchor="middle">4. Transport</text>
+                        <rect x="0" y="160" width="140" height="40" fill="#9fb3c8" stroke="#334e68"/><text x="70" y="185" text-anchor="middle">3. Nettverk</text>
+                        <rect x="0" y="200" width="140" height="40" fill="#829ab1" stroke="#334e68"/><text x="70" y="225" text-anchor="middle">2. Datalink</text>
+                        <rect x="0" y="240" width="140" height="40" fill="#627d98" stroke="#334e68"/><text x="70" y="265" text-anchor="middle" fill="white">1. Fysisk</text>
+                    </g>
+
+                    <!-- TCP/IP Stack -->
+                    <g transform="translate(310, 60)">
+                        <!-- App combines top 3 -->
+                        <rect x="0" y="0" width="140" height="120" fill="#d64545" fill-opacity="0.1" stroke="#d64545" stroke-dasharray="4"/><text x="70" y="65" text-anchor="middle" fill="#d64545" font-weight="bold">Applikasjon</text>
+                        
+                        <rect x="0" y="120" width="140" height="40" fill="#bcccdc" stroke="#334e68"/><text x="70" y="145" text-anchor="middle">Transport</text>
+                        <rect x="0" y="160" width="140" height="40" fill="#9fb3c8" stroke="#334e68"/><text x="70" y="185" text-anchor="middle">Nettverk</text>
+                        <rect x="0" y="200" width="140" height="40" fill="#829ab1" stroke="#334e68"/><text x="70" y="225" text-anchor="middle">Datalink</text>
+                        <rect x="0" y="240" width="140" height="40" fill="#627d98" stroke="#334e68"/><text x="70" y="265" text-anchor="middle" fill="white">Fysisk</text>
+                    </g>
+                    
+                    <!-- Mapping lines -->
+                    <path d="M 190 60 L 310 60" stroke="#d64545" stroke-dasharray="4" />
+                    <path d="M 190 180 L 310 180" stroke="#d64545" stroke-dasharray="4" />
+                </svg>
             </div>
         </div>
     </div>
@@ -257,14 +370,43 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
                     <li><strong>Cookies:</strong> Lar serveren "huske" deg (state) selv om HTTP er stateless.</li>
                 </ul>
             </div>
-             <div class="tile" style="text-align: left; padding: 25px;">
-                <h3><i class="fa-solid fa-envelope"></i> E-post</h3>
-                <p><strong>SMTP (Push):</strong> Sender mail <em>fra</em> deg til server, og <em>mellom</em> servere.</p>
-                <p><strong>POP3/IMAP (Pull):</strong> Henter mail <em>fra</em> server til deg.</p>
-                <ul>
-                    <li><em>POP3:</em> Laster ned og sletter (ofte). Enkel.</li>
-                    <li><em>IMAP:</em> Synkroniserer mapper. Mail blir på server.</li>
-                </ul>
+             <div style="text-align: left; padding: 25px; background: white; border: 1px solid #d9e2ec; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3><i class="fa-solid fa-envelope"></i> E-post Flyt</h3>
+                <!-- Diagram: SMTP/IMAP Flow -->
+                <div style="width: 100%; height: 180px; margin-bottom: 20px;">
+                    <svg class="area-chart-svg" viewBox="0 0 500 180">
+                        <!-- Alice -->
+                        <text x="50" y="150" text-anchor="middle" font-weight="bold">Deg</text>
+                        <circle cx="50" cy="110" r="20" fill="#334e68" />
+                        <text x="50" y="115" fill="white" text-anchor="middle" font-size="12">User</text>
+
+                        <!-- Sender Server -->
+                        <rect x="150" y="80" width="60" height="60" fill="#bcccdc" rx="5" />
+                        <text x="180" y="115" fill="#102a43" text-anchor="middle" font-size="10">Din Mail</text>
+                        <text x="180" y="130" fill="#102a43" text-anchor="middle" font-size="10">Server</text>
+
+                        <!-- Receiver Server -->
+                        <rect x="290" y="80" width="60" height="60" fill="#bcccdc" rx="5" />
+                        <text x="320" y="115" fill="#102a43" text-anchor="middle" font-size="10">Mottaker</text>
+                        <text x="320" y="130" fill="#102a43" text-anchor="middle" font-size="10">Server</text>
+
+                        <!-- Bob -->
+                        <text x="450" y="150" text-anchor="middle" font-weight="bold">Venn</text>
+                        <circle cx="450" cy="110" r="20" fill="#d64545" />
+
+                        <!-- Arrows -->
+                        <line x1="70" y1="110" x2="140" y2="110" stroke="#102a43" stroke-width="2" marker-end="url(#arrow)" />
+                        <text x="105" y="100" text-anchor="middle" font-size="10" fill="#d64545">SMTP (Push)</text>
+
+                        <line x1="210" y1="110" x2="280" y2="110" stroke="#102a43" stroke-width="2" marker-end="url(#arrow)" />
+                        <text x="245" y="100" text-anchor="middle" font-size="10" fill="#d64545">SMTP (Push)</text>
+
+                        <line x1="350" y1="110" x2="420" y2="110" stroke="#102a43" stroke-width="2" marker-end="url(#arrow)" />
+                        <text x="385" y="100" text-anchor="middle" font-size="10" fill="#334e68">IMAP (Pull)</text>
+                    </svg>
+                </div>
+                <p><strong>SMTP:</strong> Brukes for å sende (Push).<br>
+                <strong>IMAP:</strong> Brukes for å hente (Pull) og lese.</p>
             </div>
         </div>
     </div>
@@ -347,12 +489,28 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
     <div class="content-area">
         <div class="two-column tiled">
             <div>
-                <h3>Pipelining</h3>
-                <p>I stedet for å vente på "OK" for hver pakke (Stop-and-wait), sender vi mange pakker fortløpende.</p>
-                <ul>
-                    <li><strong>Go-Back-N:</strong> Hvis pakke 3 mangler, send 3, 4, 5, 6 på nytt (kumulativ ACK).</li>
-                    <li><strong>Selective Repeat:</strong> Send KUN pakke 3 på nytt. Krever mer minne/logikk.</li>
-                </ul>
+                <h3>Pipelining (Go-Back-N)</h3>
+                <!-- Diagram: Sliding Window -->
+                <div style="width: 100%; height: 120px; margin-bottom: 20px;">
+                    <svg class="area-chart-svg" viewBox="0 0 400 100">
+                        <!-- Packets -->
+                        <rect x="10" y="30" width="30" height="30" fill="#28a745" stroke="black" /><text x="25" y="50" text-anchor="middle" fill="white">1</text>
+                        <rect x="50" y="30" width="30" height="30" fill="#28a745" stroke="black" /><text x="65" y="50" text-anchor="middle" fill="white">2</text>
+                        
+                        <!-- Window -->
+                        <rect x="90" y="20" width="120" height="50" fill="none" stroke="#d64545" stroke-width="3" rx="5" />
+                        <text x="150" y="15" fill="#d64545" text-anchor="middle" font-size="12">Vindu (Window)</text>
+
+                        <!-- In Flight -->
+                        <rect x="95" y="30" width="30" height="30" fill="#ffc107" stroke="black" /><text x="110" y="50" text-anchor="middle">3</text>
+                        <rect x="135" y="30" width="30" height="30" fill="#ffc107" stroke="black" /><text x="150" y="50" text-anchor="middle">4</text>
+                        <rect x="175" y="30" width="30" height="30" fill="#ffc107" stroke="black" /><text x="190" y="50" text-anchor="middle">5</text>
+
+                        <!-- Not Sent -->
+                        <rect x="220" y="30" width="30" height="30" fill="#e2e8f0" stroke="black" /><text x="235" y="50" text-anchor="middle">6</text>
+                    </svg>
+                </div>
+                <p>Sender flere pakker (3, 4, 5) uten å vente på ACK for hver enkelt. Hvis ACK for 3 kommer, glir vinduet til høyre.</p>
             </div>
              <div>
                 <h3>QUIC (Quick UDP Internet Connections)</h3>
@@ -381,7 +539,45 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
         </div>
     </div>
     <div class="image-container">
-        <img class="bleed-image-side" src="http://googleusercontent.com/image_collection/image_retrieval/14678444329998989855" alt="IP addressing and subnetting diagram">
+        <!-- DIAGRAM: IP ADDRESSING -->
+        <svg viewBox="0 0 500 400" width="90%" height="90%">
+            <!-- Title -->
+            <text x="250" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#334e68">IP Adresse Struktur</text>
+            
+            <!-- IP Block -->
+            <g transform="translate(50, 100)">
+                <!-- Box -->
+                <rect x="0" y="0" width="400" height="80" fill="#fff" stroke="#334e68" stroke-width="2" rx="8" />
+                
+                <!-- Bytes -->
+                <text x="50" y="50" text-anchor="middle" font-size="32" font-family="monospace">192</text>
+                <text x="150" y="50" text-anchor="middle" font-size="32" font-family="monospace">168</text>
+                <text x="250" y="50" text-anchor="middle" font-size="32" font-family="monospace">1</text>
+                <text x="350" y="50" text-anchor="middle" font-size="32" font-family="monospace" fill="#d64545">10</text>
+                
+                <!-- Dots -->
+                <text x="100" y="50" text-anchor="middle" font-size="32">.</text>
+                <text x="200" y="50" text-anchor="middle" font-size="32">.</text>
+                <text x="300" y="50" text-anchor="middle" font-size="32">.</text>
+            </g>
+
+            <!-- Brackets -->
+            <line x1="50" y1="190" x2="330" y2="190" stroke="#334e68" stroke-width="3" />
+            <line x1="50" y1="185" x2="50" y2="195" stroke="#334e68" stroke-width="3" />
+            <line x1="330" y1="185" x2="330" y2="195" stroke="#334e68" stroke-width="3" />
+            <text x="190" y="220" text-anchor="middle" fill="#334e68" font-weight="bold">Nettverksdel (24 bits)</text>
+
+            <line x1="370" y1="190" x2="430" y2="190" stroke="#d64545" stroke-width="3" />
+            <line x1="370" y1="185" x2="370" y2="195" stroke="#d64545" stroke-width="3" />
+            <line x1="430" y1="185" x2="430" y2="195" stroke="#d64545" stroke-width="3" />
+            <text x="400" y="220" text-anchor="middle" fill="#d64545" font-weight="bold">Host</text>
+
+            <!-- CIDR Explanation -->
+            <rect x="50" y="260" width="400" height="100" fill="#f0f4f8" rx="8" />
+            <text x="70" y="290" font-size="18" fill="#102a43">CIDR Notasjon: <tspan font-family="monospace" font-weight="bold">/24</tspan></text>
+            <text x="70" y="320" font-size="16" fill="#486581">Betyr at de første 24 bitene er "låst".</text>
+            <text x="70" y="340" font-size="16" fill="#486581">Subnet Mask: 255.255.255.0</text>
+        </svg>
     </div>
 </div>
 
@@ -395,15 +591,37 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
                 <p class="code-font">192.168.1.0/24</p>
                 <p><strong>/24</strong> er nettverksmasken. Forteller hvor stor del av adressen som er nettverk vs host.</p>
             </div>
-            <div class="tile">
-                <h3>NAT</h3>
-                <p><strong>Network Address Translation.</strong></p>
-                <p>Gjør at alle enhetene hjemme kan dele én offentlig IP-adresse ut mot internett. Ruteren oversetter portnummer.</p>
+            <div class="tile" style="flex: 1.5;">
+                <h3>NAT (Network Address Translation)</h3>
+                <!-- Diagram: NAT -->
+                <div style="width: 100%; height: 120px; margin-bottom: 10px;">
+                    <svg class="area-chart-svg" viewBox="0 0 400 120">
+                        <!-- Local Network -->
+                        <text x="80" y="20" text-anchor="middle" font-size="12" fill="#627d98">Lokalt (Hjemme)</text>
+                        <rect x="40" y="40" width="80" height="60" fill="#e2e8f0" rx="5" />
+                        <text x="80" y="70" text-anchor="middle" font-size="10">192.168.1.10</text>
+                        <text x="80" y="85" text-anchor="middle" font-size="10">192.168.1.11</text>
+
+                        <!-- Router NAT -->
+                        <rect x="160" y="50" width="80" height="40" fill="#d64545" rx="5" />
+                        <text x="200" y="75" fill="white" text-anchor="middle" font-size="12">NAT Ruter</text>
+
+                        <!-- Public Internet -->
+                        <text x="320" y="20" text-anchor="middle" font-size="12" fill="#627d98">Internett (Offentlig)</text>
+                        <rect x="280" y="60" width="80" height="20" fill="#334e68" rx="5" />
+                        <text x="320" y="75" fill="white" text-anchor="middle" font-size="10">80.200.10.5</text>
+
+                        <!-- Arrows -->
+                        <line x1="120" y1="70" x2="160" y2="70" stroke="#102a43" stroke-width="2" marker-end="url(#arrow)" />
+                        <line x1="240" y1="70" x2="280" y2="70" stroke="#102a43" stroke-width="2" marker-end="url(#arrow)" />
+                    </svg>
+                </div>
+                <p>Én offentlig IP deles av alle enheter hjemme.</p>
             </div>
             <div class="tile">
                 <h3>ICMP</h3>
                 <p><strong>Internet Control Message Protocol.</strong></p>
-                <p>Brukes til feilmelding og diagnostikk. <strong>Ping</strong> og <strong>Traceroute</strong> bruker ICMP.</p>
+                <p>Feilmelding og diagnostikk. <strong>Ping</strong> og <strong>Traceroute</strong> bruker ICMP.</p>
             </div>
         </div>
     </div>
@@ -447,8 +665,35 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
                 <p><strong>Hidden Terminal:</strong> A og C ser ikke hverandre, men begge ser B. Sender samtidig -> Kræsj.</p>
                 <p><span class="viktig-badge">NYTT</span> <strong>Handover:</strong> Når mobilen bytter fra en basestasjon til en annen uten å miste samtalen.</p>
             </div>
-            <div class="image-wrapper">
-                <img src="http://googleusercontent.com/image_collection/image_retrieval/3595854971975046750" alt="CSMA CA hidden terminal problem diagram">
+            <div class="image-wrapper" style="background:#fff; border: 1px solid #eee;">
+                <!-- DIAGRAM: Hidden Terminal -->
+                <svg viewBox="0 0 500 350" width="100%" height="100%">
+                    <!-- Range Circles -->
+                    <circle cx="150" cy="175" r="120" fill="#334e68" fill-opacity="0.1" stroke="#334e68" stroke-dasharray="4"/>
+                    <circle cx="350" cy="175" r="120" fill="#d64545" fill-opacity="0.1" stroke="#d64545" stroke-dasharray="4"/>
+                    
+                    <!-- Nodes -->
+                    <!-- Node A -->
+                    <circle cx="150" cy="175" r="25" fill="#334e68" />
+                    <text x="150" y="180" text-anchor="middle" fill="white" font-weight="bold">A</text>
+                    <text x="150" y="220" text-anchor="middle" fill="#334e68">Sender til B</text>
+
+                    <!-- Node B (Center) -->
+                    <circle cx="250" cy="175" r="25" fill="#102a43" />
+                    <text x="250" y="180" text-anchor="middle" fill="white" font-weight="bold">B</text>
+                    
+                    <!-- Node C -->
+                    <circle cx="350" cy="175" r="25" fill="#d64545" />
+                    <text x="350" y="180" text-anchor="middle" fill="white" font-weight="bold">C</text>
+                    <text x="350" y="220" text-anchor="middle" fill="#d64545">Sender til B</text>
+
+                    <!-- Interaction -->
+                    <text x="250" y="120" text-anchor="middle" font-weight="bold" fill="#d64545" font-size="20">KOLLISJON!</text>
+                    <path d="M 230 160 L 270 190 M 270 160 L 230 190" stroke="#d64545" stroke-width="4" />
+                    
+                    <!-- Explanation -->
+                    <text x="250" y="320" text-anchor="middle" font-style="italic" fill="#486581">A og C ser ikke hverandre. Begge sender samtidig.</text>
+                </svg>
             </div>
         </div>
     </div>
@@ -458,18 +703,24 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
 <div class="slide-container" id="slide12">
     <div class="section-title-layout">
         <h2>Sjekkliste før tirsdag!</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 30px; max-width: 900px; margin-left: auto; margin-right: auto;">
-            <span class="code-font" style="font-size: 1.2em;">OSI vs TCP/IP</span>
-            <span class="code-font" style="font-size: 1.2em;">4 Forsinkelser</span>
-            <span class="code-font" style="font-size: 1.2em;">HTTP & DNS</span>
-            <span class="code-font" style="font-size: 1.2em;">3-way Handshake</span>
-            <span class="code-font" style="font-size: 1.2em;">Flyt- vs Opphopningskontroll</span>
-            <span class="code-font" style="font-size: 1.2em;">Subnetting / CIDR</span>
-            <span class="code-font" style="font-size: 1.2em;">NAT & DHCP</span>
-            <span class="code-font" style="font-size: 1.2em;">Svitsj vs Ruter</span>
-            <span class="code-font" style="font-size: 1.2em;">CSMA/CA vs CD</span>
+        <p style="margin-bottom: 30px;">Klikk på punktene for å få en "jukselapp"!</p>
+        
+        <div id="checklist-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 10px; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <!-- Generated by JS -->
         </div>
-        <p style="margin-top: 30px;">Neste slide: Den store testen!</p>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="info-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-modal-btn">&times;</span>
+                <h3 id="modal-title" style="margin-top:0; font-size:32px;">Tittel</h3>
+                <div id="modal-body" style="font-size: 18px; line-height: 1.6; color: #486581;">
+                    Innhold
+                </div>
+            </div>
+        </div>
+
+        <p style="margin-top: 50px;">Neste slide: Den store testen!</p>
     </div>
 </div>
 
@@ -484,6 +735,44 @@ p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
 </div>
 
 <script>
+    /* --- CHECKLIST DATA --- */
+    const checklistData = {
+        "OSI vs TCP/IP": "<strong>OSI (7 lag):</strong> Teoretisk modell (Fysisk, Link, Nettverk, Transport, Sesjon, Presentasjon, Applikasjon).<br><br><strong>TCP/IP (5 lag):</strong> Internett-modellen (Fysisk, Link, Nettverk, Transport, Applikasjon). De tre øverste i OSI er bakt inn i Applikasjon i TCP/IP.",
+        "4 Forsinkelser": "1. <strong>Prosessering:</strong> Sjekke feil/header.<br>2. <strong>Kø:</strong> Vente på ledig linje.<br>3. <strong>Transmisjon:</strong> Legge bits på linja (L/R).<br>4. <strong>Utbredelse:</strong> Fysisk reise (lengde/hastighet).",
+        "HTTP & DNS": "<strong>HTTP:</strong> Protokoll for web. Stateless. Port 80. Bruker TCP.<br><br><strong>DNS:</strong> Oversetter www.vg.no -> IP-adresse. Bruker UDP port 53. Hierarkisk (Rot -> TLD -> Autoritativ).",
+        "3-way Handshake": "Måten TCP oppretter forbindelse på:<br>1. Klient sender <strong>SYN</strong>.<br>2. Server svarer <strong>SYN-ACK</strong>.<br>3. Klient svarer <strong>ACK</strong>.<br>Nå er forbindelsen åpen.",
+        "Flyt- vs Opphopning": "<strong>Flytkontroll (Flow):</strong> Hindre at du sender for fort for <em>mottakeren</em> (Receive Window).<br><br><strong>Opphopningskontroll (Congestion):</strong> Hindre at du sender for fort for <em>nettverket/ruterne</em> (Congestion Window).",
+        "Subnetting / CIDR": "<strong>CIDR (/24):</strong> Forteller hvor mange bits som er låst til nettverksadressen. Resten er til hoster.<br>Eks: 192.168.1.0/24 betyr at 192.168.1 er nettverket, og du har 254 mulige adresser (.1 til .254) til PC-er.",
+        "NAT & DHCP": "<strong>NAT:</strong> Oversetter private IP-adresser (hjemme) til én offentlig IP (internett).<br><br><strong>DHCP:</strong> Gir deg automatisk IP-adresse, Gateway og DNS når du kobler til nettverket.",
+        "Svitsj vs Ruter": "<strong>Svitsj (Lag 2):</strong> Bruker MAC-adresser. Jobber lokalt (LAN). Selvlærende.<br><br><strong>Ruter (Lag 3):</strong> Bruker IP-adresser. Kobler sammen ulike nettverk (WAN/LAN). Bruker rutingtabeller.",
+        "CSMA/CA vs CD": "<strong>CSMA/CD (Ethernet):</strong> Oppdager kollisjon, stopper, venter, prøver igjen.<br><br><strong>CSMA/CA (WiFi):</strong> Prøver å <em>unngå</em> kollisjon ved å lytte først, og ofte bruke RTS/CTS handshaking, fordi man ikke kan høre og sende samtidig trådløst."
+    };
+
+    /* --- INIT CHECKLIST --- */
+    const checklistContainer = document.getElementById('checklist-container');
+    const modal = document.getElementById('info-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeModal = document.getElementById('close-modal-btn');
+
+    for (const [key, value] of Object.entries(checklistData)) {
+        const btn = document.createElement('button');
+        btn.className = 'check-btn';
+        btn.innerHTML = key;
+        btn.onclick = () => {
+            modalTitle.innerText = key;
+            modalBody.innerHTML = value;
+            modal.style.display = 'flex';
+        };
+        checklistContainer.appendChild(btn);
+    }
+
+    closeModal.onclick = () => { modal.style.display = 'none'; };
+    window.onclick = (event) => {
+        if (event.target == modal) { modal.style.display = 'none'; }
+    };
+
+    /* --- QUIZ DATA --- */
     const questions = [
         // --- MODUL 1 ---
         {
