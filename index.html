@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komplett Eksamensrevisjon: Datakommunikasjon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. THE SETUP */
+* { box-sizing: border-box; }
+
+body {
+  background-color: #f0f4f8;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 0;
+  place-items: center;
+  font-family: 'Inter', sans-serif;
+  color: #102a43;
+}
+
+.slide-container {
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 720px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px;
+  position: relative;
+  width: 1280px;
+  margin-bottom: 40px; /* Space between slides when scrolling */
+}
+
+/* Background Design */
+.slide-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at top right, #d9e2ec 0%, transparent 40%),
+              radial-gradient(circle at bottom left, #bcccdc 0%, transparent 40%);
+  z-index: 0;
+}
+
+.slide-container > * { position: relative; z-index: 1; }
+
+/* 2. TYPOGRAPHY */
+h1, h2, h3 { font-weight: 700; color: #102a43; margin: 0; }
+h1 { font-size: 64px; line-height: 1.1; letter-spacing: -1px; }
+.slide-title { font-size: 48px; margin-bottom: 30px; width: 100%; text-align: left; border-bottom: 3px solid #334e68; padding-bottom: 15px; }
+h3 { font-size: 26px; margin-bottom: 10px; color: #334e68; margin-top: 15px; }
+p, li, td, th { font-size: 19px; line-height: 1.5; color: #486581; }
+.code-font { font-family: 'JetBrains Mono', monospace; color: #d64545; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+/* Important Badge */
+.viktig-badge {
+    background-color: #ffe3e3;
+    color: #c53030;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 8px;
+}
+
+/* 3. LAYOUTS */
+.title-layout { text-align: center; max-width: 800px; }
+.title-layout h1 { margin-bottom: 20px; color: #243b53; }
+.content-area { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; width: 100%; }
+
+.two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; width: 100%; }
+.two-column.tiled > div { background: #f0f4f8; padding: 30px; border-radius: 12px; border-left: 5px solid #334e68; }
+
+.image-wrapper {
+  border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex; justify-content: center; align-items: center; background: #fff;
+  height: 350px; width: 100%;
+}
+.image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+/* Bleed Image */
+.slide-container.bleed-image-layout { display: grid; grid-template-columns: 1fr 1fr; padding: 0; align-items: start; gap: 0; }
+.slide-container.bleed-image-layout .content-container { padding: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+.slide-container.bleed-image-layout .image-container { height: 100%; width: 100%; }
+.slide-container.bleed-image-layout img.bleed-image-side { width: 100%; height: 100%; object-fit: cover; }
+
+/* Tables */
+.table-layout table { width: 100%; border-collapse: collapse; }
+.table-layout th { text-align: left; background: #334e68; color: #fff; padding: 12px; font-size: 20px; }
+.table-layout td { padding: 12px; border-bottom: 1px solid #d9e2ec; font-size: 18px; }
+.table-layout tr:nth-child(even) { background-color: #f0f4f8; }
+
+/* Tiled Icons */
+.tiled-content { display: flex; gap: 30px; width: 100%; }
+.tile { flex: 1; background: #fff; border: 1px solid #d9e2ec; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.tile .icon { font-size: 40px; color: #243b53; margin-bottom: 15px; }
+
+/* Section Title */
+.section-title-layout { text-align: center; }
+.section-title-layout h2 { font-size: 56px; color: #102a43; }
+.section-title-layout hr { width: 100px; border: 3px solid #334e68; margin: 30px auto; }
+
+/* Charts */
+.chart-container { width: 100%; height: 350px; display: flex; justify-content: center; }
+.area-chart-svg { width: 90%; height: 100%; overflow: visible; }
+.chart-summary { text-align: center; font-style: italic; color: #627d98; margin-top: 20px; }
+
+/* QUIZ STYLES */
+.quiz-scroll-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 20px;
+    scroll-behavior: smooth;
+}
+
+.question-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+}
+
+.question-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #102a43;
+    margin-bottom: 15px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.option-btn {
+    background: #f0f4f8;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 12px 15px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #486581;
+    transition: all 0.2s;
+}
+
+.option-btn:hover {
+    background: #e1e7ef;
+}
+
+.option-btn.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.option-btn.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.explanation {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eef4fc;
+    border-left: 4px solid #334e68;
+    border-radius: 4px;
+    display: none; /* Hidden by default */
+    font-size: 16px;
+    color: #334e68;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide-container" id="slide1">
+    <div class="title-layout">
+        <h1>Eksamensoppsummering</h1>
+        <p class="subtitle" style="font-size: 24px; color: #627d98;">Modul 1-6: Komplett oversikt</p>
+        <div style="margin-top: 40px; font-size: 18px; color: #829ab1;">Oppdatert for å dekke alle læremål</div>
+    </div>
+</div>
+
+<!-- Slide 2: Modul 1 Concepts -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Modul 1: Det grunnleggende</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3><i class="fa-solid fa-network-wired"></i> Nettverksstruktur</h3>
+                <p><strong>Kjerne vs. Kant:</strong> Kant er brukerutstyret (oss). Kjernen er rutere/infrastruktur.</p>
+                <p><strong>Internett vs. WWW:</strong> Internett er infrastrukturen (kablene, IP). WWW er en applikasjon (nettsider) som kjører <em>på</em> Internett.</p>
+                <p><strong>RFC (Request For Comments):</strong> De offisielle dokumentene som definerer internettstandarder (f.eks. definisjonen av HTTP).</p>
+            </div>
+            <div>
+                <h3><i class="fa-solid fa-hourglass-half"></i> 4 typer forsinkelse</h3>
+                <ol>
+                    <li><strong>Prosessering:</strong> Sjekke bitfeil, rutingvalg.</li>
+                    <li><strong>Kø:</strong> Vente på tur i bufferet.</li>
+                    <li><strong>Transmisjon:</strong> Legge bits på linja (L/R).</li>
+                    <li><strong>Utbredelse:</strong> Fysisk reisetid (lys i fiber).</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: OSI vs TCP/IP -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">Lagdeling & Modeller</h2>
+    <div class="content-area">
+        <div class="two-column">
+             <div>
+                <h3>Hvorfor lagdeling?</h3>
+                <p>Abstraksjon! Hvert lag tilbyr en tjeneste til laget over uten å vise hvordan det gjøres.</p>
+                <ul>
+                    <li><strong>OSI (7 lag):</strong> Teoretisk modell (Fysisk, Link, Nettverk, Transport, Sesjon, Presentasjon, Applikasjon).</li>
+                    <li><strong>TCP/IP (5 lag):</strong> Modellen Internett faktisk bruker.</li>
+                </ul>
+                <p><span class="viktig-badge">VIKTIG</span> <strong>Innkapsling:</strong> Data får ny "konvolutt" (header) for hvert lag nedover.</p>
+            </div>
+            <div class="image-wrapper">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/11429737186578722592" alt="OSI vs TCP/IP model comparison diagram">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Modul 2 Applikasjon -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">Modul 2: Applikasjoner</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>HTTP & Sockets</h3>
+                <ul>
+                    <li><strong>Socket:</strong> API-et (døren) mellom applikasjonen og nettverket. Definert av IP + Port.</li>
+                    <li><strong>HTTP:</strong> Stateless. Persistent (HTTP 1.1) vs Non-persistent (HTTP 1.0).</li>
+                    <li><strong>Cookies:</strong> Lar serveren "huske" deg (state) selv om HTTP er stateless.</li>
+                </ul>
+            </div>
+             <div class="tile" style="text-align: left; padding: 25px;">
+                <h3><i class="fa-solid fa-envelope"></i> E-post</h3>
+                <p><strong>SMTP (Push):</strong> Sender mail <em>fra</em> deg til server, og <em>mellom</em> servere.</p>
+                <p><strong>POP3/IMAP (Pull):</strong> Henter mail <em>fra</em> server til deg.</p>
+                <ul>
+                    <li><em>POP3:</em> Laster ned og sletter (ofte). Enkel.</li>
+                    <li><em>IMAP:</em> Synkroniserer mapper. Mail blir på server.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Modul 3 Transport -->
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">Modul 3: Transportlaget (TCP/UDP)</h2>
+    <div class="content-area">
+        <div class="table-layout">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Egenskap</th>
+                        <th>TCP</th>
+                        <th>UDP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Type</strong></td>
+                        <td>Forbindelsesorientert (Handshake)</td>
+                        <td>Forbindelsesløs (Send & pray)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pålitelighet</strong></td>
+                        <td>Garantert levering, rett rekkefølge</td>
+                        <td>Ingen garanti, pakker kan tapes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kontroll</strong></td>
+                        <td>Flytkontroll + Opphopningskontroll</td>
+                        <td>Ingen (Kun sjekksum)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nytt</strong></td>
+                        <td>Pipelining (Go-Back-N / Sel. Repeat)</td>
+                        <td>QUIC (HTTP/3 bruker dette over UDP)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: TCP Deep Dive -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">TCP Mekanismer</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>3-Way Handshake (Oppkobling)</h3>
+                <ol>
+                    <li><strong>SYN:</strong> Klient initierer.</li>
+                    <li><strong>SYN-ACK:</strong> Server svarer.</li>
+                    <li><strong>ACK:</strong> Klient bekrefter -> Kobling oppe!</li>
+                </ol>
+                <h3>Flyt vs. Opphopning</h3>
+                <p><strong>Flytkontroll (Flow):</strong> Ikke drukne <em>mottakeren</em> (rwnd).</p>
+                <p><strong>Opphopningskontroll (Congestion):</strong> Ikke drukne <em>nettverket</em> (cwnd).</p>
+            </div>
+            <div class="chart-container">
+                 <!-- Sawtooth Visualization -->
+                 <svg class="area-chart-svg" viewBox="0 0 800 300">
+                    <line x1="50" y1="250" x2="750" y2="250" stroke="#102a43" stroke-width="2" />
+                    <line x1="50" y1="50" x2="50" y2="250" stroke="#102a43" stroke-width="2" />
+                    <path fill="none" stroke="#d64545" stroke-width="3" 
+                          d="M 50 250 L 200 100 L 200 200 L 350 100 L 350 200 L 500 100 L 500 200 L 650 100" />
+                    <text x="220" y="90" fill="#334e68" font-size="14">Pakketap -> Halver vindu</text>
+                    <text x="350" y="280" fill="#102a43" font-size="14" text-anchor="middle">Tid (TCP Sagtanneffekt)</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Pipelining & QUIC (New) -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">Avansert Transport: Pipelining & QUIC</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Pipelining</h3>
+                <p>I stedet for å vente på "OK" for hver pakke (Stop-and-wait), sender vi mange pakker fortløpende.</p>
+                <ul>
+                    <li><strong>Go-Back-N:</strong> Hvis pakke 3 mangler, send 3, 4, 5, 6 på nytt (kumulativ ACK).</li>
+                    <li><strong>Selective Repeat:</strong> Send KUN pakke 3 på nytt. Krever mer minne/logikk.</li>
+                </ul>
+            </div>
+             <div>
+                <h3>QUIC (Quick UDP Internet Connections)</h3>
+                <p>Nyere protokoll (brukt i HTTP/3) bygd på toppen av UDP.</p>
+                <ul>
+                    <li>Løser "Head-of-Line blocking" (en tapt pakke stopper ikke alt).</li>
+                    <li>Raskere handshake (baker inn sikkerhet TLS 1.3).</li>
+                    <li>Brukervennlig for mobil (bytte mellom WiFi/4G uten brudd).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Slide 8: Modul 4 Network Layer -->
+<div class="slide-container bleed-image-layout" id="slide8">
+    <div class="content-container">
+        <h2 class="slide-title">Modul 4: Nettverkslaget</h2>
+        <div class="content-area">
+             <h3>Data Plane vs Control Plane</h3>
+             <p><strong>Data Plane (Forwarding):</strong> Lokal. Flytter pakker input -> output i ruteren.</p>
+             <p><strong>Control Plane (Routing):</strong> Global. Bestemmer ruten.
+                <br>- <em>Tradisjonell:</em> Ruteren regner selv (OSPF/Dijkstra).
+                <br>- <em>SDN (Software Defined):</em> En sentral server bestemmer rutene og sender tabeller til ruterne.</p>
+        </div>
+    </div>
+    <div class="image-container">
+        <img class="bleed-image-side" src="http://googleusercontent.com/image_collection/image_retrieval/14678444329998989855" alt="IP addressing and subnetting diagram">
+    </div>
+</div>
+
+<!-- Slide 9: IP, NAT & ICMP (New) -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">IP-detaljer, NAT & ICMP</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <h3>CIDR & Subnet</h3>
+                <p class="code-font">192.168.1.0/24</p>
+                <p><strong>/24</strong> er nettverksmasken. Forteller hvor stor del av adressen som er nettverk vs host.</p>
+            </div>
+            <div class="tile">
+                <h3>NAT</h3>
+                <p><strong>Network Address Translation.</strong></p>
+                <p>Gjør at alle enhetene hjemme kan dele én offentlig IP-adresse ut mot internett. Ruteren oversetter portnummer.</p>
+            </div>
+            <div class="tile">
+                <h3>ICMP</h3>
+                <p><strong>Internet Control Message Protocol.</strong></p>
+                <p>Brukes til feilmelding og diagnostikk. <strong>Ping</strong> og <strong>Traceroute</strong> bruker ICMP.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: Modul 5 Link Layer -->
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">Modul 5: Datalinklaget</h2>
+    <div class="content-area">
+        <div class="two-column">
+             <div>
+                <h3>Adressering & Utstyr</h3>
+                <ul>
+                    <li><strong>MAC-adresse:</strong> Fysisk adresse (brent i kortet). Brukes lokalt (hop-to-hop).</li>
+                    <li><strong>ARP:</strong> "Hvem har IP X? -> Her er MAC Y". Kobler IP til MAC.</li>
+                    <li><strong>Svitsj (L2):</strong> Bruker MAC-tabell (self-learning). Skiller kollisjonsdomener.</li>
+                    <li><strong>Ruter (L3):</strong> Bruker IP. Skiller kringkastingsdomener (broadcast).</li>
+                </ul>
+            </div>
+            <div class="tile" style="text-align:left; background:#f0f4f8;">
+                <h3>CSMA/CD (Ethernet)</h3>
+                <p>Carrier Sense Multiple Access / Collision Detection.</p>
+                <ol>
+                    <li>Lytt før du prater.</li>
+                    <li>Hvis opptatt: Vent.</li>
+                    <li>Hvis kollisjon mens du prater: <strong>Stopp (Jam signal)</strong>, vent tilfeldig tid, prøv igjen.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: Modul 6 Wireless -->
+<div class="slide-container" id="slide11">
+    <h2 class="slide-title">Modul 6: Trådløst & Mobil</h2>
+    <div class="content-area">
+        <div class="two-column">
+             <div>
+                <h3>WiFi (802.11) vs Mobil</h3>
+                <p><strong>CSMA/CA (Collision Avoidance):</strong> WiFi kan ikke detektere kollisjon like lett som kabel. Sender derfor RTS (Request to Send) -> får CTS (Clear to Send).</p>
+                <p><strong>Hidden Terminal:</strong> A og C ser ikke hverandre, men begge ser B. Sender samtidig -> Kræsj.</p>
+                <p><span class="viktig-badge">NYTT</span> <strong>Handover:</strong> Når mobilen bytter fra en basestasjon til en annen uten å miste samtalen.</p>
+            </div>
+            <div class="image-wrapper">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/3595854971975046750" alt="CSMA CA hidden terminal problem diagram">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 12: Checklist -->
+<div class="slide-container" id="slide12">
+    <div class="section-title-layout">
+        <h2>Sjekkliste før tirsdag!</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 30px; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <span class="code-font" style="font-size: 1.2em;">OSI vs TCP/IP</span>
+            <span class="code-font" style="font-size: 1.2em;">4 Forsinkelser</span>
+            <span class="code-font" style="font-size: 1.2em;">HTTP & DNS</span>
+            <span class="code-font" style="font-size: 1.2em;">3-way Handshake</span>
+            <span class="code-font" style="font-size: 1.2em;">Flyt- vs Opphopningskontroll</span>
+            <span class="code-font" style="font-size: 1.2em;">Subnetting / CIDR</span>
+            <span class="code-font" style="font-size: 1.2em;">NAT & DHCP</span>
+            <span class="code-font" style="font-size: 1.2em;">Svitsj vs Ruter</span>
+            <span class="code-font" style="font-size: 1.2em;">CSMA/CA vs CD</span>
+        </div>
+        <p style="margin-top: 30px;">Neste slide: Den store testen!</p>
+    </div>
+</div>
+
+<!-- Slide 13: The MEGA QUIZ -->
+<div class="slide-container" id="slide13">
+    <h2 class="slide-title">Den Store Eksamens-Quizen (40 Spørsmål)</h2>
+    <div class="content-area" style="justify-content: flex-start; overflow: hidden; height: 100%;">
+        <div class="quiz-scroll-container" id="quiz-container">
+            <!-- Questions will be injected here by JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // --- MODUL 1 ---
+        {
+            q: "Hvilken type svitsjing brukes hovedsakelig på Internett?",
+            options: ["Linjesvitsjing", "Pakkesvitsjing", "Frekvenssvitsjing", "Melding-svitsjing"],
+            correct: 1,
+            explanation: "Internett bruker pakkesvitsjing (best effort). Linjesvitsjing er det gamle telefonnettet."
+        },
+        {
+            q: "Hva er 'propagation delay' (utbredelsesforsinkelse)?",
+            options: ["Tiden det tar å legge bitene på linja", "Tiden det tar å prosessere headeren", "Tiden signalet bruker på å reise gjennom kabelen", "Tiden pakken venter i kø"],
+            correct: 2,
+            explanation: "Utbredelsesforsinkelse bestemmes av avstanden og lysets hastighet i mediet."
+        },
+        {
+            q: "Hvor mange lag er det i OSI-modellen?",
+            options: ["4", "5", "7", "9"],
+            correct: 2,
+            explanation: "OSI har 7 lag. TCP/IP har 4 eller 5."
+        },
+        {
+            q: "Hva betyr begrepet 'enkapsulering' (innkapsling)?",
+            options: ["Å pakke data inn med en header fra gjeldende lag", "Å kryptere data", "Å komprimere data", "Å dele opp data i mindre biter"],
+            correct: 0,
+            explanation: "Hvert lag legger på sin egen header utenpå dataene fra laget over."
+        },
+        {
+            q: "Hva er en RFC?",
+            options: ["Request For Connection", "Request For Comments", "Radio Frequency Control", "Routing Forwarding Check"],
+            correct: 1,
+            explanation: "RFC er de offisielle dokumentene som definerer standardene på Internett (f.eks. IETF)."
+        },
+        {
+            q: "Hva befinner seg i 'nettverkskanten'?",
+            options: ["Rutere og svitsjer", "Servere, PC-er og mobiler", "Fiberkabler", "DNS-servere"],
+            correct: 1,
+            explanation: "Kanten består av endesystemer (hosts) som vi brukere interagerer med."
+        },
+        // --- MODUL 2 ---
+        {
+            q: "Hvilken transportprotokoll bruker HTTP?",
+            options: ["UDP", "TCP", "ICMP", "IP"],
+            correct: 1,
+            explanation: "HTTP trenger pålitelighet, så den bruker TCP (port 80)."
+        },
+        {
+            q: "Er HTTP stateless eller stateful?",
+            options: ["Stateless", "Stateful", "Begge deler", "Ingen av delene"],
+            correct: 0,
+            explanation: "HTTP er stateless. Serveren husker ikke forrige forespørsel uten bruk av cookies."
+        },
+        {
+            q: "Hvilken DNS-record mapper et navn til en IPv4-adresse?",
+            options: ["NS", "CNAME", "MX", "A"],
+            correct: 3,
+            explanation: "A-record (Address) kobler domenenavn til IPv4. AAAA kobler til IPv6."
+        },
+        {
+            q: "Hvilken protokoll brukes for å SENDE e-post?",
+            options: ["POP3", "IMAP", "SMTP", "HTTP"],
+            correct: 2,
+            explanation: "SMTP (Simple Mail Transfer Protocol) er en 'push'-protokoll for sending."
+        },
+        {
+            q: "Hva er en socket?",
+            options: ["En fysisk kontakt i veggen", "IP-adresse + Portnummer", "En type webserver", "En krypteringsnøkkel"],
+            correct: 1,
+            explanation: "En socket er grensesnittet mellom applikasjonsprosessen og transportlaget, definert av IP:Port."
+        },
+        {
+            q: "Hva er forskjellen på POP3 og IMAP?",
+            options: ["POP3 lagrer på server, IMAP laster ned", "IMAP beholder mail på server, POP3 laster ofte ned og sletter", "Ingen forskjell", "POP3 er for sending, IMAP for mottak"],
+            correct: 1,
+            explanation: "IMAP er mer moderne og lar deg se samme mail fra flere enheter (synkronisering)."
+        },
+        // --- MODUL 3 ---
+        {
+            q: "Hvilken egenskap har UDP?",
+            options: ["Pålitelig overføring", "Forbindelsesorientert", "Ingen garanti for levering (Best effort)", "Flytkontroll"],
+            correct: 2,
+            explanation: "UDP er rask og enkel, men sjekker ikke om pakken faktisk kommer frem."
+        },
+        {
+            q: "Hva skjer under TCP 3-way handshake?",
+            options: ["SYN, SYN-ACK, ACK", "ACK, SYN, FIN", "HELLO, HI, OK", "PING, PONG, PANG"],
+            correct: 0,
+            explanation: "Klient sender SYN, server svarer SYN-ACK, klient bekrefter med ACK."
+        },
+        {
+            q: "Hva er formålet med TCP flytkontroll (Flow Control)?",
+            options: ["Å hindre at nettverket overbelastes", "Å hindre at mottakeren overbelastes", "Å finne raskeste vei", "Å kryptere data"],
+            correct: 1,
+            explanation: "Flytkontroll bruker 'receive window' for å matche senders fart med mottakers kapasitet."
+        },
+        {
+            q: "Hvordan oppdager TCP pakketap?",
+            options: ["Via ICMP meldinger", "Timeout eller dupliserte ACKs", "Mottaker sender en NAK (Negative ACK)", "Routeren gir beskjed"],
+            correct: 1,
+            explanation: "Hvis ACK ikke kommer innen en viss tid (timeout) eller man får 3 like ACK, antar TCP tap."
+        },
+        {
+            q: "Hva er Pipelining?",
+            options: ["Å sende data gjennom en fiberkabel", "Å sende flere pakker uten å vente på ACK for hver enkelt", "Å bruke rørpost", "En type virus"],
+            correct: 1,
+            explanation: "Pipelining øker effektiviteten ved å utnytte ventetiden (RTT) til å sende mer data."
+        },
+        {
+            q: "Hvilken protokoll bruker HTTP/3?",
+            options: ["TCP", "UDP (QUIC)", "SCTP", "IPSec"],
+            correct: 1,
+            explanation: "HTTP/3 bruker QUIC, som er bygget oppå UDP for lavere latency."
+        },
+        // --- MODUL 4 ---
+        {
+            q: "Hva er hovedoppgaven til Data Plane i en ruter?",
+            options: ["Å beregne rutingtabellen", "Forwarding (Videresending) av pakker fra inn-port til ut-port", "Å dele ut IP-adresser", "Å kjøre OSPF"],
+            correct: 1,
+            explanation: "Data Plane gjør grojobben med å flytte pakker lokalt basert på tabellen."
+        },
+        {
+            q: "Hva forteller subnettmasken /24 oss?",
+            options: ["At vi har 24 IP-adresser totalt", "At de første 24 bitene er nettverksdelen", "At de siste 24 bitene er hostdelen", "At nettet er tregt"],
+            correct: 1,
+            explanation: "/24 betyr at de første 24 bitene definerer nettverket (f.eks. 192.168.1.x)."
+        },
+        {
+            q: "Hva gjør NAT (Network Address Translation)?",
+            options: ["Oversetter domenenavn til IP", "Oversetter private IP-er til offentlig IP", "Finner MAC-adresser", "Blokkerer virus"],
+            correct: 1,
+            explanation: "NAT lar mange enheter på et hjemmenettverk dele én offentlig IP-adresse."
+        },
+        {
+            q: "Hvilken protokoll bruker 'ping' verktøyet?",
+            options: ["TCP", "UDP", "ICMP", "HTTP"],
+            correct: 2,
+            explanation: "Ping bruker ICMP Echo Request og Echo Reply."
+        },
+        {
+            q: "Hva er DHCP?",
+            options: ["Dynamic Host Configuration Protocol (Deler ut IP)", "Domain Host Control Protocol", "Data Handling Control Protocol", "Digital Http Control Protocol"],
+            correct: 0,
+            explanation: "DHCP gir automatisk IP-adresse, gateway og DNS-info til enheter som kobler seg på nettet."
+        },
+        {
+            q: "Hva er SDN?",
+            options: ["Software Defined Networking", "Secure Data Networking", "Simple Domain Naming", "Static Data Node"],
+            correct: 0,
+            explanation: "SDN skiller control plane fra data plane og sentraliserer styringen."
+        },
+        {
+            q: "Hvor mange bit er en IPv4 adresse?",
+            options: ["32 bit", "48 bit", "64 bit", "128 bit"],
+            correct: 0,
+            explanation: "IPv4 er 32 bit (4 bytes). IPv6 er 128 bit."
+        },
+        // --- MODUL 5 ---
+        {
+            q: "Hva brukes en MAC-adresse til?",
+            options: ["Å rute pakker over hele verden", "Å identifisere enheter innenfor samme lokale nettverk (Link layer)", "Å identifisere en prosess på en PC", "Å finne nettsider"],
+            correct: 1,
+            explanation: "MAC brukes kun for å hoppe til neste enhet (hop-to-hop) i samme subnett."
+        },
+        {
+            q: "Hva gjør ARP?",
+            options: ["Finner IP ut fra MAC", "Finner MAC ut fra IP", "Finner Port ut fra IP", "Finner DNS ut fra IP"],
+            correct: 1,
+            explanation: "Address Resolution Protocol oversetter IP (Logisk) til MAC (Fysisk)."
+        },
+        {
+            q: "Hva kjennetegner en Svitsj (Switch)?",
+            options: ["Opererer på lag 3, bruker IP", "Opererer på lag 2, bruker MAC, er selvlærende", "Sender alt ut på alle porter (Hub)", "Kobler sammen ulike nettverk"],
+            correct: 1,
+            explanation: "Svitsjer bruker MAC-tabeller for å sende data kun til riktig mottaker."
+        },
+        {
+            q: "Hva betyr CSMA/CD?",
+            options: ["Carrier Sense Multiple Access with Collision Detection", "Computer Sense Main Access with Code Division", "Carrier System Main Area with Cool Data", "Collision Sense Main Access / Collision Drop"],
+            correct: 0,
+            explanation: "Metoden som brukes i kablet Ethernet for å håndtere kollisjoner."
+        },
+        {
+            q: "Hvor lang er en MAC-adresse?",
+            options: ["32 bit", "48 bit", "128 bit", "8 bit"],
+            correct: 1,
+            explanation: "MAC-adresser er 48 bit, ofte skrevet som 6 hex-par (eks: AA:BB:CC:11:22:33)."
+        },
+        // --- MODUL 6 ---
+        {
+            q: "Hvorfor bruker WiFi CSMA/CA i stedet for CD?",
+            options: ["Det er billigere", "Det er vanskelig å oppdage kollisjoner trådløst (Collision Avoidance)", "WiFi kolliderer aldri", "CD er for treigt"],
+            correct: 1,
+            explanation: "En radio kan vanligvis ikke sende og lytte samtidig på samme frekvens med nok styrke til å høre kollisjoner."
+        },
+        {
+            q: "Hva er 'Hidden Terminal Problem'?",
+            options: ["At ruteren er gjemt bak sofaen", "At to noder ikke ser hverandre, men begge ser basestasjonen og kolliderer", "At passordet er skjult", "At signalet er for svakt"],
+            correct: 1,
+            explanation: "A og C ser ikke hverandre. Begge sender til B samtidig -> Kollisjon."
+        },
+        {
+            q: "Hva er 'Handover' i mobilnett?",
+            options: ["Å gi telefonen til en venn", "Når en samtale/dataflyt flyttes fra en basestasjon til en annen", "Å slå av telefonen", "Å bytte SIM-kort"],
+            correct: 1,
+            explanation: "Viktig for mobilitet; nettverket må sømløst bytte tårn når du beveger deg."
+        },
+        {
+            q: "Hvilket frekvensbånd er mest vanlig for eldre WiFi (802.11b/g/n)?",
+            options: ["2.4 GHz", "5 GHz", "60 GHz", "900 MHz"],
+            correct: 0,
+            explanation: "2.4 GHz er klassikeren (lang rekkevidde, mye støy). 5 GHz er nyere og raskere."
+        },
+        {
+            q: "Hva betyr RTS/CTS?",
+            options: ["Ready To Send / Clear To Send", "Run To Server / Call To Server", "Router To Switch / Computer To Server", "Real Time System / Common Time System"],
+            correct: 0,
+            explanation: "En mekanisme i WiFi for å reservere kanalen og unngå Hidden Terminal-problemer."
+        },
+        // --- DIVERSE / SIKKERHET ---
+        {
+            q: "Hvilket portnummer bruker HTTPS?",
+            options: ["80", "443", "25", "22"],
+            correct: 1,
+            explanation: "HTTPS bruker 443. HTTP bruker 80. SSH bruker 22."
+        },
+        {
+            q: "Hva er 'Throughput'?",
+            options: ["Teoretisk maks hastighet", "Faktisk dataoverføringshastighet over tid", "Antall pakker tapt", "Forsinkelse"],
+            correct: 1,
+            explanation: "Throughput er den reelle raten data leveres med (bits per sekund)."
+        },
+        {
+            q: "Hvor implementeres TLS/SSL (sikkerhet) i lagmodellen?",
+            options: ["Mellom Applikasjon og Transport", "I Datalinklaget", "I Nettverkslaget", "I Fysisk lag"],
+            correct: 0,
+            explanation: "TLS ligger 'oppå' TCP, teknisk sett i applikasjonslaget, men fungerer som en sikker transport."
+        },
+        {
+            q: "Hva er TTL (Time To Live) i en IP-pakke?",
+            options: ["Hvor lenge pakken skal lagres", "En teller som minker for hver ruter (hop) for å hindre evige løkker", "Dato for når pakken ble skapt", "Tiden det tar å sende pakken"],
+            correct: 1,
+            explanation: "Når TTL når 0, kastes pakken (og avsender får ofte en ICMP Time Exceeded)."
+        },
+        {
+            q: "Hvilken enhet skiller kollisjonsdomener?",
+            options: ["Hub", "Repeater", "Svitsj", "Kabel"],
+            correct: 2,
+            explanation: "En svitsj (og ruter) skiller kollisjonsdomener. En Hub gjør det ikke."
+        }
+    ];
+
+    const container = document.getElementById('quiz-container');
+
+    questions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        
+        const qText = document.createElement('div');
+        qText.className = 'question-text';
+        qText.innerText = `${index + 1}. ${item.q}`;
+        card.appendChild(qText);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options-grid';
+
+        const explanationDiv = document.createElement('div');
+        explanationDiv.className = 'explanation';
+        explanationDiv.innerHTML = `<strong>Forklaring:</strong> ${item.explanation}`;
+
+        item.options.forEach((opt, optIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = function() {
+                // Disable all buttons in this card
+                const allBtns = optionsDiv.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.disabled = true);
+
+                if (optIndex === item.correct) {
+                    btn.classList.add('correct');
+                    btn.innerHTML += ' <i class="fa-solid fa-check"></i>';
+                } else {
+                    btn.classList.add('wrong');
+                    btn.innerHTML += ' <i class="fa-solid fa-xmark"></i>';
+                    // Highlight correct one
+                    allBtns[item.correct].classList.add('correct');
+                }
+                explanationDiv.style.display = 'block';
+            };
+            optionsDiv.appendChild(btn);
+        });
+
+        card.appendChild(optionsDiv);
+        card.appendChild(explanationDiv);
+        container.appendChild(card);
+    });
+</script>
+
+</body>
+</html>
