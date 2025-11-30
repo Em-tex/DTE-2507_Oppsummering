@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksamensoppsummering: IT-Sikkerhet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. THE SETUP */
+* { box-sizing: border-box; }
+
+body {
+  background-color: #102a43; /* Darker theme for security */
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 40px 0;
+  place-items: center;
+  font-family: 'Inter', sans-serif;
+  color: #f0f4f8;
+}
+
+.slide-container {
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  height: 720px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px;
+  position: relative;
+  width: 1280px;
+  margin-bottom: 40px;
+  color: #102a43;
+}
+
+/* Background Design - Matrix/Cyber feel */
+.slide-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at top right, #e6fffa 0%, transparent 40%),
+              radial-gradient(circle at bottom left, #e3f2fd 0%, transparent 40%);
+  z-index: 0;
+}
+
+.slide-container > * { position: relative; z-index: 1; }
+
+/* 2. TYPOGRAPHY */
+h1, h2, h3 { font-weight: 700; color: #102a43; margin: 0; }
+h1 { font-size: 64px; line-height: 1.1; letter-spacing: -1px; }
+.slide-title { font-size: 48px; margin-bottom: 30px; width: 100%; text-align: left; border-bottom: 3px solid #d64545; padding-bottom: 15px; }
+h3 { font-size: 26px; margin-bottom: 10px; color: #d64545; margin-top: 15px; }
+p, li, td, th { font-size: 19px; line-height: 1.5; color: #334e68; }
+.code-font { font-family: 'JetBrains Mono', monospace; color: #d64545; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+
+/* Important Badge */
+.viktig-badge {
+    background-color: #ffe3e3;
+    color: #c53030;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 8px;
+}
+
+/* INTERACTIVE TERMS */
+.term {
+    cursor: help;
+    border-bottom: 2px dotted #d64545;
+    color: #102a43;
+    transition: background 0.2s;
+}
+.term:hover {
+    background-color: #ffe3e3;
+    color: #d64545;
+}
+
+/* 3. LAYOUTS */
+.title-layout { text-align: center; max-width: 800px; }
+.title-layout h1 { margin-bottom: 20px; color: #102a43; }
+.content-area { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; width: 100%; }
+
+.two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; width: 100%; }
+.two-column.tiled > div { background: #f0f4f8; padding: 30px; border-radius: 12px; border-left: 5px solid #d64545; }
+
+/* Charts & Diagrams */
+.chart-container { width: 100%; height: 300px; display: flex; justify-content: center; margin: 20px 0; }
+.area-chart-svg { width: 90%; height: 100%; overflow: visible; }
+
+/* Tables */
+.table-layout table { width: 100%; border-collapse: collapse; }
+.table-layout th { text-align: left; background: #243b53; color: #fff; padding: 12px; font-size: 20px; }
+.table-layout td { padding: 12px; border-bottom: 1px solid #d9e2ec; font-size: 18px; }
+.table-layout tr:nth-child(even) { background-color: #f0f4f8; }
+
+/* Tiled Icons */
+.tiled-content { display: flex; gap: 30px; width: 100%; }
+.tile { flex: 1; background: #fff; border: 1px solid #d9e2ec; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.tile .icon { font-size: 40px; color: #d64545; margin-bottom: 15px; }
+
+/* Section Title */
+.section-title-layout { text-align: center; }
+.section-title-layout h2 { font-size: 56px; color: #102a43; }
+.section-title-layout hr { width: 100px; border: 3px solid #d64545; margin: 30px auto; }
+
+/* QUIZ STYLES */
+.quiz-scroll-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 20px;
+    scroll-behavior: smooth;
+}
+
+.question-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+}
+
+.question-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #102a43;
+    margin-bottom: 15px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.option-btn {
+    background: #f0f4f8;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 12px 15px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #486581;
+    transition: all 0.2s;
+}
+
+.option-btn:hover { background: #e1e7ef; }
+
+.option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+.explanation {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eef4fc;
+    border-left: 4px solid #243b53;
+    border-radius: 4px;
+    display: none;
+    font-size: 16px;
+    color: #334e68;
+}
+
+/* Checklist / Modal */
+.check-btn {
+    cursor: pointer; background: #fff; border: 2px solid #d64545; color: #d64545;
+    padding: 10px 20px; border-radius: 30px; font-size: 16px; font-weight: 600;
+    transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.check-btn:hover { background: #d64545; color: #fff; transform: translateY(-2px); }
+
+.modal-overlay {
+    display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(16, 42, 67, 0.95); z-index: 100; justify-content: center; align-items: center;
+}
+.modal-content {
+    background: white; padding: 40px; border-radius: 16px; max-width: 700px; width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: left; position: relative;
+    border-top: 8px solid #d64545;
+}
+.close-modal {
+    position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #829ab1;
+}
+.close-modal:hover { color: #d64545; }
+
+/* Definitions inside modal */
+.def-section h4 { color: #d64545; margin-bottom: 5px; margin-top: 20px; }
+.def-section p { margin-top: 0; font-size: 17px; }
+
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide-container" id="slide1">
+    <div class="title-layout">
+        <h1>Eksamensoppsummering Del 2</h1>
+        <p class="subtitle" style="font-size: 24px; color: #d64545;">IT-Sikkerhet: Modul S1-S5</p>
+        <div style="margin-top: 40px; font-size: 18px; color: #829ab1;">Kryptering • Malware • Nettverk • Brannmur • Web</div>
+        <p style="margin-top:20px; font-size: 16px; color:#486581;">Tips: Klikk på <span class="term" onclick="openDef('CIA')">stiplede ord</span> for forklaring!</p>
+    </div>
+</div>
+
+<!-- Slide 2: CIA Triade -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Grunnleggende: <span class="term" onclick="openDef('CIA')">CIA-Triaden</span></h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-user-secret"></i></div>
+                <h3>Confidentiality</h3>
+                <p><strong>Konfidensialitet</strong></p>
+                <p>Kun autoriserte skal ha tilgang til data. Sikres med <span class="term" onclick="openDef('Kryptering')">kryptering</span> og tilgangskontroll.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-file-contract"></i></div>
+                <h3>Integrity</h3>
+                <p><strong>Integritet</strong></p>
+                <p>Data skal ikke kunne endres uautorisert. Sikres med <span class="term" onclick="openDef('Hashing')">hashing</span> og <span class="term" onclick="openDef('Digital Signatur')">digitale signaturer</span>.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-server"></i></div>
+                <h3>Availability</h3>
+                <p><strong>Tilgjengelighet</strong></p>
+                <p>Data skal være tilgjengelig når man trenger det. Trussel: <span class="term" onclick="openDef('DoS')">DoS/DDoS</span>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Modul S1 Kryptering -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">Modul S1: Kryptering</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Symmetrisk vs Asymmetrisk</h3>
+                <p><strong>Symmetrisk (<span class="term" onclick="openDef('AES')">AES</span>):</strong> Samme nøkkel låser og låser opp. Raskt! Utfordring: Nøkkeldistribusjon.</p>
+                <p><strong>Asymmetrisk (<span class="term" onclick="openDef('RSA')">RSA</span>):</strong> To nøkler (Privat + Offentlig).
+                <br><em>Kryptering:</em> Send med Mottakers Offentlige nøkkel -> Kun mottaker kan åpne med sin Private.</p>
+            </div>
+            <div style="background: #fff; border:1px solid #ccc; border-radius:12px; padding: 20px;">
+                <!-- SVG: Digital Signature -->
+                <h4 style="text-align:center; color:#334e68; margin-top:0;">Digital Signatur</h4>
+                <svg class="area-chart-svg" viewBox="0 0 450 150">
+                    <!-- Sender -->
+                    <text x="50" y="30" text-anchor="middle" font-weight="bold">Avsender</text>
+                    <rect x="20" y="40" width="60" height="40" fill="#e2e8f0" stroke="#334e68"/>
+                    <text x="50" y="65" text-anchor="middle" font-size="10">Data</text>
+                    
+                    <!-- Hash -->
+                    <path d="M 80 60 L 110 60" stroke="#334e68" stroke-width="2" marker-end="url(#arrow)"/>
+                    <circle cx="130" cy="60" r="20" fill="#bcccdc"/>
+                    <text x="130" y="65" text-anchor="middle" font-size="10">Hash</text>
+
+                    <!-- Encrypt -->
+                    <path d="M 150 60 L 180 60" stroke="#334e68" stroke-width="2" marker-end="url(#arrow)"/>
+                    <rect x="180" y="40" width="60" height="40" fill="#d64545" stroke="#334e68"/>
+                    <text x="210" y="65" text-anchor="middle" font-size="10" fill="white">Signer</text>
+                    <text x="210" y="100" text-anchor="middle" font-size="10" fill="#d64545">(Privat nøkkel)</text>
+
+                    <!-- Result -->
+                    <path d="M 240 60 L 270 60" stroke="#334e68" stroke-width="2" marker-end="url(#arrow)"/>
+                    <text x="320" y="65" text-anchor="middle" font-size="12" font-weight="bold">Signert Data</text>
+                </svg>
+                <p style="font-size: 14px; text-align: center; margin-top: 5px;">Signering = Hash av data + Kryptering med <strong>Avsenders PRIVATE</strong> nøkkel.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: Modul S2 Malware & Passord -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">Modul S2: Malware & Passord</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>Buffer Overflow (<span class="term" onclick="openDef('Stack Smashing')">Stack Smashing</span>)</h3>
+                <p>Når et program skriver mer data til en buffer enn det er plass til. Data flyter over og overskriver returadressen på stakken.</p>
+                <p><strong>Angrep:</strong> Sette inn ondsinnet kode (shellcode) og peke returadressen dit.</p>
+                <p><strong>Beskyttelse:</strong> <span class="term" onclick="openDef('ASLR')">ASLR</span>, <span class="term" onclick="openDef('NX-bit')">NX-bit</span>, sjekk input lengde.</p>
+            </div>
+            <div>
+                <h3>Sikring av Passord</h3>
+                <p>Aldri lagre passord i klartekst! Bruk <strong>Hashing</strong> (enveis funksjon).</p>
+                <p><strong><span class="term" onclick="openDef('Salt')">Salt</span>:</strong> En tilfeldig streng legges til passordet før hashing for å hindre <em><span class="term" onclick="openDef('Rainbow Tables')">Rainbow Tables</span></em>.</p>
+                <p class="code-font">$6$salt$hash...</p> (SHA-512 i Linux)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Modul S3 Nettverk -->
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">Modul S3: Nettverkssikkerhet</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3><span class="term" onclick="openDef('ARP Spoofing')">ARP Spoofing</span> (<span class="term" onclick="openDef('MITM')">MITM</span>)</h3>
+                <p>ARP kobler IP til MAC. Protokollen har ingen sjekk/autentisering.</p>
+                <p><strong>Angrep:</strong> "Jeg er Ruter!" (sender falsk ARP-svar). Offeret sender trafikken til angriper i stedet for ruteren.</p>
+                <p><strong><span class="term" onclick="openDef('DNS Spoofing')">DNS Spoofing</span>:</strong> Angriper svarer falsk IP på DNS-forespørsel ("vg.no er min IP").</p>
+                <p><strong>Tiltak:</strong> Statiske ARP-tabeller, ARPwatch, <span class="term" onclick="openDef('DNSSEC')">DNSSEC</span>.</p>
+            </div>
+            <div style="background: #fff; border:1px solid #ccc; border-radius:12px; padding: 20px;">
+                <!-- SVG: ARP MITM -->
+                <svg class="area-chart-svg" viewBox="0 0 400 200">
+                    <!-- Victim -->
+                    <circle cx="50" cy="150" r="25" fill="#334e68"/>
+                    <text x="50" y="190" text-anchor="middle" font-size="12">Offer</text>
+
+                    <!-- Attacker -->
+                    <circle cx="200" cy="50" r="25" fill="#d64545"/>
+                    <text x="200" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#d64545">Angriper (MITM)</text>
+
+                    <!-- Router -->
+                    <circle cx="350" cy="150" r="25" fill="#334e68"/>
+                    <text x="350" y="190" text-anchor="middle" font-size="12">Ruter</text>
+
+                    <!-- Paths -->
+                    <path d="M 75 150 Q 200 150 325 150" stroke="#ccc" stroke-width="2" stroke-dasharray="5"/>
+                    <text x="200" y="165" text-anchor="middle" font-size="10" fill="#999">Normal trafikk</text>
+
+                    <path d="M 65 130 L 180 65" stroke="#d64545" stroke-width="3" marker-end="url(#arrow)"/>
+                    <path d="M 220 65 L 335 130" stroke="#d64545" stroke-width="3" marker-end="url(#arrow)"/>
+                    <text x="120" y="90" text-anchor="middle" font-size="10" fill="#d64545">ARP: "Jeg er Ruter"</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Modul S4 Brannmur -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Modul S4: Brannmurer & DMZ</h2>
+    <div class="content-area">
+        <div class="table-layout">
+            <table style="font-size: 16px;">
+                <tr>
+                    <th>Type</th>
+                    <th>Beskrivelse</th>
+                </tr>
+                <tr>
+                    <td><strong>Pakkefiltrering (Stateless)</strong></td>
+                    <td>Ser på hver enkelt pakke isolert (IP, Port). Rask, men lett å lure.</td>
+                </tr>
+                <tr>
+                    <td><strong>Tilstandsfull (Stateful)</strong></td>
+                    <td>Husker forbindelser (NEW, ESTABLISHED). Slipper svarpakker automatisk inn.</td>
+                </tr>
+                <tr>
+                    <td><strong><span class="term" onclick="openDef('Proxy')">Applikasjons-proxy</span></strong></td>
+                    <td>Forstår protokollen (HTTP, FTP). Kan se inni dataene. Tryggest, men tregest.</td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 20px; background: #fff; padding: 15px; border-radius: 8px;">
+            <!-- SVG: DMZ -->
+            <svg class="area-chart-svg" viewBox="0 0 600 120">
+                <rect x="10" y="40" width="60" height="40" fill="#999" rx="5"/><text x="40" y="65" text-anchor="middle" fill="white">Internett</text>
+                
+                <line x1="70" y1="60" x2="120" y2="60" stroke="#333" stroke-width="2"/>
+                
+                <rect x="120" y="30" width="10" height="60" fill="#d64545"/><text x="125" y="105" text-anchor="middle" font-size="10">FW Ytre</text>
+                
+                <rect x="180" y="20" width="140" height="80" fill="#e3f2fd" stroke="#334e68" stroke-dasharray="4"/>
+                <text x="250" y="40" text-anchor="middle" font-size="12" font-weight="bold" onclick="openDef('DMZ')" style="cursor:pointer; fill:#d64545;">DMZ</text>
+                <circle cx="210" cy="70" r="15" fill="#334e68"/><text x="210" y="105" text-anchor="middle" font-size="10">Web</text>
+                <circle cx="290" cy="70" r="15" fill="#334e68"/><text x="290" y="105" text-anchor="middle" font-size="10">Mail</text>
+
+                <line x1="320" y1="60" x2="380" y2="60" stroke="#333" stroke-width="2"/>
+
+                <rect x="380" y="30" width="10" height="60" fill="#d64545"/><text x="385" y="105" text-anchor="middle" font-size="10">FW Indre</text>
+
+                <line x1="390" y1="60" x2="450" y2="60" stroke="#333" stroke-width="2"/>
+                <rect x="450" y="40" width="60" height="40" fill="#28a745" rx="5"/><text x="480" y="65" text-anchor="middle" fill="white">LAN</text>
+            </svg>
+            <p style="font-size:14px; text-align:center;"><span class="term" onclick="openDef('DMZ')">DMZ</span> (Demilitarized Zone): Et buffer-nettverk for tjenester som må nås utenfra.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Modul S5 Web Sikkerhet -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">Modul S5: Web Sikkerhet</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3><span class="term" onclick="openDef('SQL Injection')">SQL Injection</span></h3>
+                <p>Brukerinput tolkes som SQL-kode.</p>
+                <p class="code-font">SELECT * FROM users WHERE name = '<strong>' OR 1=1 --</strong>'</p>
+                <p>Gir tilgang til alt. Løsning: <strong><span class="term" onclick="openDef('Prepared Statements')">Prepared Statements</span></strong> (skiller kode og data).</p>
+            </div>
+            <div>
+                <h3><span class="term" onclick="openDef('XSS')">XSS</span> (Cross Site Scripting)</h3>
+                <p>Angriper får kjørt JavaScript i offerets nettleser. Kan stjele cookies/sesjoner.</p>
+                <p>Løsning: <strong>Input Validation</strong> og <strong>Output Escaping</strong> (gjør &lt;script&gt; til tekst, ikke kode).</p>
+            </div>
+        </div>
+        <div style="margin-top:20px; padding:15px; background:#fff; border-radius:8px; border:1px solid #ccc;">
+            <h3 style="margin-top:0; font-size:20px;"><span class="term" onclick="openDef('CSRF')">CSRF</span> (Cross-Site Request Forgery)</h3>
+            <p style="font-size:16px;">Angriper lurer nettleseren din til å utføre en handling på et nettsted du er logget inn på. Beskyttelse: <strong>Anti-CSRF Tokens</strong>.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Sjekkliste -->
+<div class="slide-container" id="slide8">
+    <h2 class="slide-title">Sjekkliste Sikkerhet</h2>
+    <p>Klikk på temaene for en detaljert eksamensoppsummering:</p>
+    <div id="checklist-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 10px; max-width: 900px; margin-left: auto; margin-right: auto;">
+        <!-- Generated by JS -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-btn">&times;</span>
+            <h3 id="modal-title" style="margin-top:0; font-size:32px;">Tittel</h3>
+            <div id="modal-body" style="font-size: 18px; line-height: 1.6; color: #486581;">
+                Innhold
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top:40px; font-weight:bold; color:#d64545;">Neste slide: 50+ Spørsmål Quiz!</div>
+</div>
+
+<!-- Slide 9: THE MEGA QUIZ -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">Den Store Sikkerhets-Quizen (50+ spm)</h2>
+    <div class="content-area" style="justify-content: flex-start; overflow: hidden; height: 100%;">
+        <div class="quiz-scroll-container" id="quiz-container">
+            <!-- Questions will be injected here by JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- DEFINITIONS & CHECKLIST DATA --- */
+    // Dette objektet brukes både for sjekklisten og for de klikkbare ordene
+    const definitions = {
+        "CIA": `
+            <div class="def-section">
+                <h4>Confidentiality (Konfidensialitet)</h4>
+                <p>Sikre at data holdes hemmelig og kun leses av autoriserte. <strong>Verktøy:</strong> Kryptering (AES), Tilgangskontroll, Autentisering.</p>
+                <h4>Integrity (Integritet)</h4>
+                <p>Sikre at data er ekte og ikke endret uautorisert. <strong>Verktøy:</strong> Hashing (SHA256), Digitale signaturer, MAC (Message Auth Code).</p>
+                <h4>Availability (Tilgjengelighet)</h4>
+                <p>Sikre at data er tilgjengelig når det trengs. <strong>Trusler:</strong> DoS/DDoS, strømbrudd. <strong>Verktøy:</strong> Backup, Redundans, Brannmur.</p>
+            </div>
+        `,
+        "Symmetrisk vs Asymmetrisk": `
+            <div class="def-section">
+                <h4>Symmetrisk Kryptering (f.eks. AES, DES)</h4>
+                <p>Bruker <strong>SAMME</strong> nøkkel for å låse og låse opp. <br>+ Veldig raskt.<br>- Vanskelig å dele nøkkelen sikkert (Key Distribution Problem).<br>Brukes til å kryptere selve dataene/filene.</p>
+                <h4>Asymmetrisk Kryptering (f.eks. RSA)</h4>
+                <p>Bruker <strong>TO</strong> nøkler: En Privat (hemmelig) og en Offentlig (deles med alle).<br>+ Løser nøkkeldistribusjon.<br>- Veldig tregt.<br>Brukes til å utveksle den symmetriske nøkkelen og til signering.</p>
+            </div>
+        `,
+        "Kryptering": "Se 'Symmetrisk vs Asymmetrisk'. Prosessen med å gjøre lesbar data uleselig.",
+        "AES": "Advanced Encryption Standard. Den mest brukte <strong>symmetriske</strong> algoritmen i dag. Rask og sikker.",
+        "RSA": "Den mest brukte <strong>asymmetriske</strong> algoritmen. Basert på primtallfaktorisering. Brukes ofte i TLS handshake.",
+        "Digital Signatur": `
+            <div class="def-section">
+                <p>Gir <strong>Autentisering</strong> (vi vet hvem avsender er), <strong>Integritet</strong> (data er ikke endret) og <strong>Non-repudiation</strong> (avsender kan ikke nekte).</p>
+                <h4>Hvordan det virker:</h4>
+                <ol>
+                    <li>Avsender lager en <strong>Hash</strong> av meldingen.</li>
+                    <li>Avsender krypterer hashen med sin <strong>PRIVATE</strong> nøkkel.</li>
+                    <li>Mottaker dekrypterer med avsenders <strong>OFFENTLIGE</strong> nøkkel og sjekker mot sin egen hash.</li>
+                </ol>
+            </div>
+        `,
+        "Buffer Overflow": `
+            <div class="def-section">
+                <p>En svakhet i C/C++ programmer hvor man skriver mer data til minnet enn det er plass til i variabelen (bufferet).</p>
+                <h4>Stack Smashing</h4>
+                <p>Angriper overskriver <strong>returadressen</strong> på stacken for å få prosessoren til å hoppe til angriperens egen kode (Shellcode).</p>
+                <h4>Mottiltak</h4>
+                <p><strong>ASLR:</strong> Randomiserer minneadresser så angriper ikke vet hvor han skal hoppe.<br><strong>NX-bit:</strong> Gjør stacken 'No-Execute', så kode der ikke kan kjøres.<br><strong>Koding:</strong> Aldri bruk <code>strcpy</code>, bruk <code>strncpy</code>.</p>
+            </div>
+        `,
+        "Stack Smashing": "Se 'Buffer Overflow'.",
+        "ASLR": "Address Space Layout Randomization. Sikkerhetsmekanisme som stokker om på hvor programmer ligger i minnet for å gjøre det vanskelig å gjette adresser ved exploits.",
+        "NX-bit": "No-Execute bit. En hardware-funksjon som markerer områder i minnet (som stacken) som 'ikke kjørbar', slik at injisert kode ikke fungerer.",
+        "Hashing": `
+            <div class="def-section">
+                <p>En enveis matematisk funksjon. Gjør data om til en streng av fast lengde (f.eks. 256 bit).</p>
+                <ul>
+                    <li><strong>Enveis:</strong> Kan ikke gå tilbake fra Hash til Data.</li>
+                    <li><strong>Kollisjonsfri:</strong> To ulike data skal aldri gi samme hash.</li>
+                    <li><strong>Bruk:</strong> Lagre passord (aldri lagre passord i klartekst!) og sjekke fil-integritet.</li>
+                </ul>
+            </div>
+        `,
+        "Salt": "Tilfeldige data som legges til passordet FØR hashing. Dette gjør at selv om to brukere har passordet '123456', får de helt ulik hash. Dette stopper Rainbow Tables.",
+        "Rainbow Tables": "En enorm database med ferdigutregnede hasher for millioner av mulige passord. Brukes for å knekke passord lynraskt. 'Salting' gjør disse tabellene ubrukelige.",
+        "ARP Spoofing": `
+            <div class="def-section">
+                <p>Et angrep på lokalt nettverk (LAN). ARP-protokollen har ingen sikkerhet.</p>
+                <p>Angriper sender falske ARP-meldinger: 'Jeg har IP-en til ruteren'.</p>
+                <p><strong>Resultat:</strong> Man-in-the-Middle (MITM). All trafikk fra offeret går via angriperen.</p>
+                <p><strong>Mottiltak:</strong> Dynamisk ARP Inspection (DAI) på svitsjer, statiske ARP-tabeller, ARPwatch.</p>
+            </div>
+        `,
+        "MITM": "Man-in-the-Middle. En angriper plasserer seg mellom to parter og avlytter eller endrer trafikken uten at de vet det.",
+        "DNS Spoofing": "Å lure en bruker til feil nettside ved å gi falskt svar på en DNS-forespørsel (f.eks. si at vg.no ligger på angriperens IP).",
+        "DNSSEC": `
+            <div class="def-section">
+                <p>Sikrer DNS mot spoofing ved å legge til <strong>kryptografiske signaturer</strong> på DNS-svar.</p>
+                <p><strong>RRSIG:</strong> Selve signaturen på svaret.</p>
+                <p><strong>DNSKEY:</strong> Den offentlige nøkkelen som trengs for å sjekke signaturen.</p>
+                <p><strong>Chain of Trust:</strong> Man stoler på Rot-serveren, som signerer .no, som signerer uit.no osv.</p>
+            </div>
+        `,
+        "Brannmur typer": `
+            <div class="def-section">
+                <h4>Pakkefiltrering (Stateless)</h4>
+                <p>Enkel og rask. Ser på hver pakke isolert (IP/Port). Vet ikke om pakken er svar på en forespørsel.</p>
+                <h4>Tilstandsfull (Stateful)</h4>
+                <p>Standard i dag. Husker forbindelser i en tabell. Slipper automatisk inn svar-pakker hvis de hører til en etablert sesjon (ESTABLISHED).</p>
+                <h4>Applikasjons-proxy</h4>
+                <p>Forstår selve innholdet (HTTP, FTP). Kan se inni pakken og stoppe virus eller spesifikke kommandoer. Tryggest, men krever mest ressurser.</p>
+            </div>
+        `,
+        "Proxy": "En mellomtjener. Klienten snakker med Proxy, Proxy snakker med Internett. Skjuler klientens IP og kan filtrere innhold.",
+        "DMZ": `
+            <div class="def-section">
+                <h4>Demilitarized Zone</h4>
+                <p>Et eget subnett som er separert fra både Internett og det interne nettet (LAN).</p>
+                <p>Her plasseres tjenester som MÅ være tilgjengelig fra utsiden (Webserver, Mail, DNS).</p>
+                <p><strong>Hvorfor?</strong> Hvis webserveren blir hacket, er angriperen 'fanget' i DMZ og kommer ikke inn til bedriftens interne hemmeligheter.</p>
+            </div>
+        `,
+        "SQL Injection": `
+            <div class="def-section">
+                <p>Når en angriper skriver SQL-kode i et inputfelt (f.eks. brukernavn) som databasen kjører.</p>
+                <p>Eks: <code>' OR 1=1 --</code> kan logge deg inn uten passord.</p>
+                <p><strong>Løsning: Prepared Statements.</strong> Da behandles inputen som ren tekst, aldri som kode.</p>
+            </div>
+        `,
+        "Prepared Statements": "Den eneste sikre måten å kjøre SQL på i webapplikasjoner. Skiller SQL-koden fra brukerdataene ved kompilering.",
+        "XSS": `
+            <div class="def-section">
+                <h4>Cross-Site Scripting</h4>
+                <p>Angriper får lagret eller reflektert ondsinnet JavaScript på en nettside.</p>
+                <p>Når andre brukere besøker siden, kjører scriptet i <strong>deres</strong> nettleser. Kan stjele Cookies (sesjonskapring).</p>
+                <p><strong>Mottiltak:</strong> Valider input, Escape output (gjør <code>&lt;script&gt;</code> om til ufarlig tekst).</p>
+            </div>
+        `,
+        "CSRF": `
+            <div class="def-section">
+                <h4>Cross-Site Request Forgery</h4>
+                <p>Angriper lurer nettleseren din til å utføre en handling på et nettsted du allerede er logget inn på.</p>
+                <p>Eks: Et bilde på en falsk side som egentlig er en link til <code>bank.no/overfor?til=angriper&belop=1000</code>.</p>
+                <p><strong>Mottiltak:</strong> Anti-CSRF Token (en hemmelig kode i alle skjemaer som angriperen ikke kan gjette).</p>
+            </div>
+        `,
+        "DoS": "Denial of Service. Å overbelaste et system så det blir utilgjengelig. DDoS (Distributed) bruker tusenvis av maskiner (Botnet).",
+        "VPN": "Virtual Private Network. Lager en kryptert tunnel over et usikkert nettverk (Internett).",
+        "Cookie": "En liten tekstfil lagret i nettleseren. Brukes for å huske hvem du er (Sesjons-ID) siden HTTP er statsløs.",
+        "Handshake": "Prosessen i starten av en kommunikasjon (f.eks. TCP eller TLS) hvor partene blir enige om parametere (nøkler, algoritmer).",
+        "Sertifikat": "Et digitalt ID-kort for en nettside. Inneholder domenets Offentlige Nøkkel og er signert av en CA (Certificate Authority).",
+        "CA": "Certificate Authority. En part vi stoler på (f.eks. Let's Encrypt) som signerer sertifikater.",
+        "Zero Day": "En sårbarhet som blir utnyttet FØR leverandøren har rukket å lage en fiks (0 dager med beskyttelse).",
+        "Ransomware": "Løsepengevirus. Krypterer alle filene dine og krever betaling for nøkkelen.",
+        "Phishing": "Sosial manipulering via e-post/SMS for å lure deg til å gi fra deg passord.",
+        "Social Engineering": "Å manipulere mennesker (i stedet for data) for å bryte sikkerheten. Det svakeste leddet er ofte brukeren.",
+        "CVE": "Common Vulnerabilities and Exposures. En global liste/database over kjente sikkerhetshull."
+    };
+
+    /* --- SETUP FUNCTIONS --- */
+    const checklistContainer = document.getElementById('checklist-container');
+    const modal = document.getElementById('info-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeModal = document.getElementById('close-modal-btn');
+
+    // General Open Modal Function
+    window.openDef = function(key) {
+        modalTitle.innerText = key;
+        // Check if direct match, if not try to find case-insensitive or partial
+        let content = definitions[key];
+        if (!content) {
+            // Fallback lookup
+            const k = Object.keys(definitions).find(k => k.toLowerCase() === key.toLowerCase());
+            content = definitions[k] || "Ingen definisjon funnet.";
+        }
+        modalBody.innerHTML = content;
+        modal.style.display = 'flex';
+    }
+
+    // Populate Checklist Buttons
+    const checklistKeys = [
+        "Symmetrisk vs Asymmetrisk", "Digital Signatur", "Buffer Overflow", 
+        "Hashing & Salt", "ARP Spoofing", "DNSSEC", "Brannmur typer", 
+        "DMZ", "SQL Injection", "XSS", "CSRF", "CIA"
+    ];
+
+    checklistKeys.forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'check-btn';
+        btn.innerText = key;
+        btn.onclick = () => window.openDef(key);
+        checklistContainer.appendChild(btn);
+    });
+
+    closeModal.onclick = () => { modal.style.display = 'none'; };
+    window.onclick = (event) => { if (event.target == modal) { modal.style.display = 'none'; } };
+
+    /* --- QUIZ DATA --- */
+    const questions = [
+        // S1 Kryptering
+        { q: "Hva menes med 'Konfidensialitet'?", options: ["At data er tilgjengelig", "At data ikke er endret", "At kun autoriserte kan lese data", "At vi vet hvem avsender er"], correct: 2, explanation: "Konfidensialitet handler om hemmelighold." },
+        { q: "Hva menes med 'Integritet'?", options: ["At ingen kan lese dataene", "At data ikke er endret uautorisert", "At systemet ikke går ned", "At passordet er sterkt"], correct: 1, explanation: "Integritet sikrer at innholdet er ekte og uendret." },
+        { q: "Hvis 5 personer skal kommunisere sikkert med SYMMETRISK kryptering (alle med alle), hvor mange nøkler trengs?", options: ["5", "10", "15", "20"], correct: 1, explanation: "Formelen er n(n-1)/2. Altså 5*4/2 = 10." },
+        { q: "Hvis 5 personer skal kommunisere sikkert med ASYMMETRISK (Offentlig nøkkel) kryptering, hvor mange nøkkelpar trengs?", options: ["5", "10", "20", "25"], correct: 0, explanation: "Hver person trenger kun sitt eget nøkkelpar (Privat+Offentlig)." },
+        { q: "Hva sikrer en digital signatur?", options: ["Kun konfidensialitet", "Kun integritet", "Autentisering og Integritet (Non-repudiation)", "At meldingen er kryptert"], correct: 2, explanation: "Signaturen beviser hvem som sendte den og at den ikke er endret." },
+        { q: "For å verifisere en digital signatur fra Alice, hvilken nøkkel bruker Bob?", options: ["Bobs private nøkkel", "Alices private nøkkel", "Alices offentlige nøkkel", "Bobs offentlige nøkkel"], correct: 2, explanation: "Man bruker avsenders offentlige nøkkel for å sjekke signaturen laget med deres private." },
+        { q: "For å sende en hemmelig (kryptert) melding TIL Alice, hvilken nøkkel bruker Bob?", options: ["Alices offentlige nøkkel", "Alices private nøkkel", "Bobs private nøkkel", "Bobs offentlige nøkkel"], correct: 0, explanation: "Man låser med mottakers offentlige nøkkel. Kun mottaker kan åpne med sin private." },
+        { q: "Hvilken egenskap har hashing?", options: ["Det er reversibelt", "Det er enveis (kan ikke dekrypteres)", "Det bruker to nøkler", "Det brukes kun til passord"], correct: 1, explanation: "Hashing er enveis. Samme input gir alltid samme output, men man kan ikke gå tilbake." },
+        
+        // S2 Malware
+        { q: "Hva er 'Salting' av passord?", options: ["Å kryptere passordet to ganger", "Å legge til tilfeldige data før hashing", "Å lagre passordet baklengs", "Å bruke kun store bokstaver"], correct: 1, explanation: "Salt hindrer bruk av Rainbow Tables ved å gjøre hashen unik selv for like passord." },
+        { q: "Hva er et 'Buffer Overflow' angrep?", options: ["Å sende for mange e-poster", "Å skrive mer data til minnet enn det er satt av plass til", "Å gjette passord", "Å lure en bruker til å klikke på en link"], correct: 1, explanation: "Overskriving av minne kan endre programmets flyt (f.eks. return address)." },
+        { q: "I Linux /etc/shadow, hva betyr $6$ i starten av passord-strengen?", options: ["MD5", "Blowfish", "SHA-256", "SHA-512"], correct: 3, explanation: "$1$=MD5, $5$=SHA-256, $6$=SHA-512." },
+        { q: "Hva er et 'Zero Day' angrep?", options: ["Et angrep som tar 0 dager", "Utnyttelse av en sårbarhet før leverandøren har en fiks (patch)", "Et angrep som skjer ved midnatt", "Et virus som sletter alt"], correct: 1, explanation: "Det finnes ingen beskyttelse (patch) ennå når angrepet skjer." },
+        { q: "Hva er 'Ransomware'?", options: ["Spionvare", "Løsepengevirus som krypterer filer og krever betaling", "Et program som viser reklame", "En type brannmur"], correct: 1, explanation: "Ransomware tar dataene dine som gissel ved kryptering." },
+        
+        // TLS / Certs
+        { q: "Hva sjekker nettleseren IKKE ved validering av et sertifikat?", options: ["Utløpsdato", "Digital signatur fra CA", "Om domenenavnet stemmer", "Om serverens IP-adresse er statisk"], correct: 3, explanation: "IP-adressen kan endres (f.eks. lastbalansering), men domenenavnet må matche sertifikatet." },
+        { q: "Hva er minimum anbefalt nøkkellengde for RSA i dag (for å være sikker)?", options: ["512 bit", "1024 bit", "2048 bit", "4096 bit"], correct: 2, explanation: "2048 bit er dagens minimumsstandard." },
+        { q: "I TLS Handshake, hvem sender 'Change Cipher Spec'?", options: ["Kun klienten", "Kun tjeneren", "Begge", "Ingen"], correct: 2, explanation: "Begge må bekrefte at de bytter til den krypterte modusen." },
+        
+        // S3 Nettverk
+        { q: "Hva er et 'Smurf attack'?", options: ["DNS spoofing", "Ping-flom med forfalsket avsender-IP (offerets IP) til broadcast", "Buffer overflow", "SQL injection"], correct: 1, explanation: "Angriper får hele nettverket til å svare offeret samtidig (DDoS)." },
+        { q: "Hva skjer ved en 'MAC flood' mot en svitsj?", options: ["Svitsjen slår seg av", "Svitsjen begynner å oppføre seg som en HUB (fail-open)", "Svitsjen blokkerer alle porter", "Ingenting"], correct: 1, explanation: "Når MAC-tabellen blir full, broadcaster svitsjen trafikken ut på alle porter, noe som muliggjør sniffing." },
+        { q: "Hva er den beste beskyttelsen mot ARP Spoofing?", options: ["Dynamisk ARP", "Statiske ARP-tabeller", "Bruke Hub", "Kjøre Windows"], correct: 1, explanation: "Statiske oppføringer hindrer angriper i å overskrive cachen med falsk info." },
+        { q: "Hva gjør ARPwatch?", options: ["Stopper angrep", "Varsler om endringer i IP/MAC-parringer", "Krypterer ARP", "Lager VLAN"], correct: 1, explanation: "Det er et deteksjonsverktøy, ikke prevensjon." },
+        { q: "Hva er DNS Amplification attack?", options: ["Sende små spørringer med falsk avsender til åpne DNS-tjenere for å sende store svar til offeret", "Slette DNS poster", "Endre DNS poster", "Stjele domenenavn"], correct: 0, explanation: "Utnytter at DNS-svar er mye større enn spørsmålet (forsterkning/amplification)." },
+        { q: "Hva brukes DNSSEC til?", options: ["Kryptere DNS trafikk", "Signere DNS-svar for å sikre ekthet (hindre spoofing)", "Skjule IP-adresser", "Raskere oppslag"], correct: 1, explanation: "DNSSEC legger til kryptografiske signaturer (RRSIG) på DNS-postene." },
+        { q: "Hvilken DNS-post inneholder den offentlige nøkkelen i DNSSEC?", options: ["RRSIG", "DS", "DNSKEY", "TXT"], correct: 2, explanation: "DNSKEY-posten holder den offentlige nøkkelen som brukes til å verifisere signaturene." },
+        
+        // S4 Brannmur
+        { q: "Hva bør en brannmur gjøre med en inngående pakke fra Internett som har en intern kilde-IP (f.eks. 10.0.0.5)?", options: ["Slippe den inn", "Returnere den", "Forkaste den (Drop)", "Videresende den"], correct: 2, explanation: "Dette er 'Spoofing'. En pakke utenfra skal aldri ha en intern avsenderadresse." },
+        { q: "Hva kjennetegner 'Stateful Inspection' (Tilstandsfull) brannmur?", options: ["Den sjekker kun hver pakke isolert", "Den husker forbindelser og slipper automatisk inn svar-pakker", "Den fungerer som en proxy", "Den er tregest"], correct: 1, explanation: "Den holder styr på sesjonstabellen (NEW, ESTABLISHED, RELATED)." },
+        { q: "Hva er en DMZ?", options: ["Det interne nettet", "Et isolert subnett mellom internett og internt nett for offentlige tjenester", "En type VPN", "En protokoll"], correct: 1, explanation: "Demilitarized Zone. Hvis en webserver i DMZ blir hacket, er det indre nettet fortsatt trygt." },
+        { q: "Hvilken tabell i iptables brukes vanligvis til pakkefiltrering?", options: ["nat", "mangle", "filter", "raw"], correct: 2, explanation: "Filter-tabellen (INPUT, OUTPUT, FORWARD) er standard for brannmurregler." },
+        { q: "Hva gjør en Proxy-brannmur (Applikasjonsnivå)?", options: ["Ser kun på IP/Port", "Forstår applikasjonsdata (f.eks. HTTP) og kan filtrere innhold", "Er raskest", "Bruker UDP"], correct: 1, explanation: "Den opptrer som en mellommann og inspiserer selve innholdet." },
+        
+        // S5 Web
+        { q: "Hva er XSS (Cross Site Scripting)?", options: ["Injisering av SQL i database", "Kjøring av ondsinnet script i offerets nettleser", "Knekking av passord", "DDoS angrep"], correct: 1, explanation: "Angriper får nettsiden til å levere ondt script til andre brukere." },
+        { q: "Hvordan beskytter man seg best mot SQL Injection?", options: ["Input validering", "Prepared Statements (Parametrisering)", "Brannmur", "HTTPS"], correct: 1, explanation: "Prepared statements skiller SQL-koden fra dataene, slik at input aldri tolkes som kommandoer." },
+        { q: "Hva er CSRF (Cross-Site Request Forgery)?", options: ["Å stjele passord", "Å lure brukerens nettleser til å utføre en handling på et nettsted brukeren er logget inn på", "Å lese andres e-post", "Scripting"], correct: 1, explanation: "Utnytter at nettleseren automatisk sender med cookies/auth." },
+        { q: "Hvordan beskytter man seg mot CSRF?", options: ["HTTPS", "Anti-CSRF Tokens (skjulte felt i skjema)", "Kryptering", "Ingen cookies"], correct: 1, explanation: "Tokenet sikrer at forespørselen faktisk kom fra skjemaet på nettsiden, ikke fra en tredjepart." },
+        { q: "Hvorfor er 'Hidden fields' i HTML usikkert for pris/viktig info?", options: ["De vises ikke", "Brukeren kan endre dem ved å redigere HTML-kilden", "De krypteres ikke", "Serveren ser dem ikke"], correct: 1, explanation: "Alt som sendes til klienten kan manipuleres av klienten." },
+        { q: "Hva betyr det at HTTP er 'Stateless'?", options: ["Den er usikker", "Serveren husker ikke tidligere forespørsler automatisk (trenger cookies)", "Den er rask", "Den bruker UDP"], correct: 1, explanation: "Hver forespørsel er uavhengig. Cookies brukes for å lage sesjoner." },
+        { q: "Hva er en 'Cookie'?", options: ["Et virus", "En liten tekstfil lagret på klienten for å holde på tilstand/sesjon", "Et program på serveren", "En type kryptering"], correct: 1, explanation: "Brukes til å identifisere brukeren mellom sidevisninger." },
+        
+        // Diverse
+        { q: "Hva er 'Social Engineering'?", options: ["Programmering", "Manipulering av mennesker for å få tilgang til info", "Nettverksbygging", "Sosiale medier"], correct: 1, explanation: "Det svakeste leddet er ofte mennesket, ikke teknologien." },
+        { q: "Hva er forskjellen på DoS og DDoS?", options: ["Ingen forskjell", "DoS er fra én kilde, DDoS er distribuert fra mange kilder", "DDoS er svakere", "DoS bruker TCP, DDoS bruker UDP"], correct: 1, explanation: "Distributed Denial of Service bruker et botnet." },
+        { q: "Hva gjør 'Input Validation'?", options: ["Krypterer input", "Sjekker at input er i forventet format før behandling", "Sletter input", "Lagrer input"], correct: 1, explanation: "Viktig for å hindre både XSS, SQLi og Buffer Overflow." },
+        { q: "Hva er 'Prepared Statements'?", options: ["Ferdiglagde SQL-spørringer som skiller data og kode", "Ferdige websider", "Statisk HTML", "Kryptert database"], correct: 0, explanation: "Beste vern mot SQL Injection." },
+        { q: "Hva er en 'White Hat' hacker?", options: ["En ondsinnet hacker", "En etisk hacker som tester sikkerhet med tillatelse", "En hacker som ikke kan kode", "En regjeringshacker"], correct: 1, explanation: "Black hat = ondsinnet, White hat = etisk/god." },
+        
+        // Lab / Praktisk
+        { q: "Hvilken kommando i Linux viser iptables regler?", options: ["iptables -L", "iptables -show", "netstat -r", "ifconfig"], correct: 0, explanation: "List rules." },
+        { q: "Hva brukes 'John the Ripper' til?", options: ["Å rippe CD-er", "Passordknekking (Cracking)", "Portskanning", "Sniffing"], correct: 1, explanation: "Et kjent verktøy for å knekke hashed passord." },
+        { q: "Hva er 'Metasploit'?", options: ["Et spill", "Et rammeverk for å utvikle og kjøre exploits mot sårbarheter", "En brannmur", "Et antivirus"], correct: 1, explanation: "Brukes til penetrasjonstesting." },
+        { q: "Hva er 'Wireshark'?", options: ["Et virus", "En pakkesniffer / protokollanalysator", "En hai", "Et krypteringsprogram"], correct: 1, explanation: "Brukes til å se på trafikken på nettet." },
+        { q: "Hvis du skal logge inn på kark.uit.no sikkert, hva bruker du?", options: ["Telnet", "FTP", "SSH", "HTTP"], correct: 2, explanation: "SSH (Secure Shell) er kryptert." },
+        
+        // Mer Web
+        { q: "Hva betyr HttpOnly flagget på en Cookie?", options: ["At den kun virker på HTTP, ikke HTTPS", "At JavaScript i nettleseren IKKE kan lese cookien", "At den er synlig for alle", "At den slettes når nettleseren lukkes"], correct: 1, explanation: "Viktig beskyttelse mot XSS (hindrer cookie-stjeling)." },
+        { q: "Hva betyr Secure flagget på en Cookie?", options: ["At den er kryptert", "At den kun sendes over HTTPS", "At den er passordbeskyttet", "At den er usynlig"], correct: 1, explanation: "Hindrer at cookien sendes i klartekst over vanlig HTTP." },
+        { q: "Hva er 'Reflected XSS'?", options: ["Når scriptet lagres i databasen", "Når scriptet er en del av forespørselen (URL) og returneres direkte", "Når serveren angriper klienten", "Når speil brukes"], correct: 1, explanation: "Krever ofte at offeret klikker på en spesifikk link." },
+        { q: "Hva er 'Stored XSS' (Persistent)?", options: ["Når scriptet lagres permanent på serveren (f.eks. i et foruminnlegg)", "Når det er i URL-en", "Når det er i en cookie", "Når det slettes med en gang"], correct: 0, explanation: "Farligere, da det rammer alle som besøker siden." },
+        
+        // Blandet drops
+        { q: "Hva er 'Rainbow Tables'?", options: ["Fargerike tabeller", "Ferdigberegnede lister over hashen til mange mulige passord", "En krypteringsalgoritme", "En type database"], correct: 1, explanation: "Gjør passordknekking mye raskere (time-memory tradeoff)." },
+        { q: "Hva er 'Phishing'?", options: ["Fisking", "Å lure noen til å gi fra seg sensitiv info via falske e-poster/nettsider", "En type virus", "Portskanning"], correct: 1, explanation: "Sosial manipulering via e-post/web." },
+        { q: "Hva står CVE for?", options: ["Common Vulnerabilities and Exposures", "Computer Virus Emergency", "Central Virus Exchange", "Critical Vulnerability Exploit"], correct: 0, explanation: "En liste over kjente sårbarheter." },
+        { q: "Hva gjør en VPN (Virtual Private Network)?", options: ["Gjør nettet raskere", "Lager en kryptert tunnel over et usikkert nettverk (Internett)", "Fjerner virus", "Blokkerer reklame"], correct: 1, explanation: "Sikrer kommunikasjon over åpne nett." }
+    ];
+
+    const container = document.getElementById('quiz-container');
+
+    questions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        
+        const qText = document.createElement('div');
+        qText.className = 'question-text';
+        qText.innerText = `${index + 1}. ${item.q}`;
+        card.appendChild(qText);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options-grid';
+
+        const explanationDiv = document.createElement('div');
+        explanationDiv.className = 'explanation';
+        explanationDiv.innerHTML = `<strong>Forklaring:</strong> ${item.explanation}`;
+
+        item.options.forEach((opt, optIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = function() {
+                const allBtns = optionsDiv.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.disabled = true);
+
+                if (optIndex === item.correct) {
+                    btn.classList.add('correct');
+                    btn.innerHTML += ' <i class="fa-solid fa-check"></i>';
+                } else {
+                    btn.classList.add('wrong');
+                    btn.innerHTML += ' <i class="fa-solid fa-xmark"></i>';
+                    allBtns[item.correct].classList.add('correct');
+                }
+                explanationDiv.style.display = 'block';
+            };
+            optionsDiv.appendChild(btn);
+        });
+
+        card.appendChild(optionsDiv);
+        card.appendChild(explanationDiv);
+        container.appendChild(card);
+    });
+</script>
+
+</body>
+</html>
